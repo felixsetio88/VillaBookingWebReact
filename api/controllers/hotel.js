@@ -152,7 +152,6 @@ export const updateViews = async (req, res) => {
 
 export const getMostViewed = async (req, res) => {
   try {
-    // Fetch hotels sorted by views in descending order and limit to 3
     const mostViewedHotels = await Hotel.find().sort({ viewed: -1 }).limit(3);
     
     res.status(200).json(mostViewedHotels);
@@ -163,7 +162,6 @@ export const getMostViewed = async (req, res) => {
 
 export const getRecentlyAdded = async (req, res) => {
   try {
-    // Fetch hotels sorted by creation date in descending order and limit to 3
     const lastAddedHotels = await Hotel.find().sort({ createdAt: -1 }).limit(3);
     
     res.status(200).json(lastAddedHotels);
