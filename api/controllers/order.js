@@ -84,42 +84,37 @@ export const cancelOrder = async (req, res) => {
 
 export const getOrderStats = async (req, res) => {
   try {
-      // Get the start of the current week
+    
       const startOfWeek = moment().startOf('isoWeek').toDate();
       const endOfWeek = moment().endOf('isoWeek').toDate();
 
-      // 1. Total of "roomNumber"
+
       const totalRoomNumber = await Order.aggregate([
           { $group: { _id: null, totalRooms: { $sum: "$roomNumber" } } }
       ]);
 
-      // 2. Total of "total"
       const totalAmount = await Order.aggregate([
           { $group: { _id: null, totalAmount: { $sum: "$total" } } }
       ]);
 
-      // 3. Total of "canceled"
       const totalCanceled = await Order.countDocuments({ canceled: true });
 
-      // 4. Total of "roomNumber" this week
       const totalRoomNumberThisWeek = await Order.aggregate([
           { $match: { orderDate: { $gte: startOfWeek, $lte: endOfWeek } } },
           { $group: { _id: null, totalRooms: { $sum: "$roomNumber" } } }
       ]);
 
-      // 5. Total of "total" this week
       const totalAmountThisWeek = await Order.aggregate([
           { $match: { orderDate: { $gte: startOfWeek, $lte: endOfWeek } } },
           { $group: { _id: null, totalAmount: { $sum: "$total" } } }
       ]);
 
-      // 6. Total of "canceled" this week
       const totalCanceledThisWeek = await Order.countDocuments({
           canceled: true,
           orderDate: { $gte: startOfWeek, $lte: endOfWeek }
       });
 
-      // 7. Total of "confirmed"
+
       const totalConfirmed = await Order.countDocuments({ confirmed: true });
 
       const totalProductListed = await Hotel.countDocuments();
@@ -131,7 +126,7 @@ export const getOrderStats = async (req, res) => {
       const totalAccountRegistered = await User.countDocuments();
 
       const totalNotConfirmed = await Order.countDocuments({ confirmed: false });
-      // 8. Total of "confirmed" this week
+
       const totalConfirmedThisWeek = await Order.countDocuments({
           confirmed: true,
           orderDate: { $gte: startOfWeek, $lte: endOfWeek }
