@@ -46,7 +46,7 @@ export default function Login() {
   </div>
 </div>;
   if (error) return <p>Error: {error}</p>;
-  if (user.firstname)
+  if (user)
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="border-[3px] rounded-[30px] w-[300px] h-[300px] mt-10 ml-10">
