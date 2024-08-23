@@ -183,11 +183,15 @@ const Orders = () => {
                   </div>
 
                   <div className="sm:ml-10 mb-4 sm:mb-0">
-                    <img
-                      src={order.hotel.photos[0]}
-                      alt="Hotel"
-                      className="w-full sm:w-[320px] h-[240px] md:w-[400px] h-[300px] lg:w-[400px] h-[300px] object-cover rounded-[10px]"
-                    />
+                    {order.hotel && order.hotel.photos && order.hotel.photos.length > 0 ? (
+                      <img
+                        src={order.hotel.photos[0]}
+                        alt="Hotel"
+                        className="w-full sm:w-[320px] h-[240px] md:w-[400px] h-[300px] lg:w-[400px] h-[300px] object-cover rounded-[10px]"
+                      />
+                    ) : (
+                      <p className="font-poppins">No photo available to show, please try to reload.</p>
+                    )}
                   </div>
            
                   
