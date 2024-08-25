@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import VerifyRegister from './pages/verify-process/VerifyRegister';
 import Find from './pages/Find';
 import Searchresult from "./pages/Searchresult";
 import Moreinformation from "./pages/Moreinformation";
