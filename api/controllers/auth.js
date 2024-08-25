@@ -5,6 +5,34 @@ import jwt from "jsonwebtoken";
 
 export const register = async (req, res, next) => {
   try {
+    if(!req.body.firstname ||
+      !req.body.email ||
+      !req.body.passportNo ||
+      !req.body.country ||
+      !req.body.phone ||
+      !req.body.password){
+    return next(createError(400, "Please fill in all of the required fields!"));
+    }
+
+    if(!validator.isEmail(req.body.email)){
+      return next(createError(400, "Email is not valid."));
+    }
+
+    const checkEmailExists = await User.findOne({ email: req.body.email });
+    if(checkEmailExists){
+      return next(createError(400, "Email has already been used."));
+    }
+
+    const checkPassport = await User.findOne({ passportNo: req.body.passportNo });
+    if(checkPassport){
+      return next(createError(400, "Passport has already been used."));
+    }
+
+    const checkPhone = await User.findOne({ phone: req.body.phone });
+    if(checkPhone){
+      return next(createError(400, "Phone number has already been used."));
+    }
+    
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
 

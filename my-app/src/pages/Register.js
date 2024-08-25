@@ -12,6 +12,14 @@ function classNames(...classes) {
 
 export default function Register() {
   const [agreed, setAgreed] = useState(false)
+  const [errors, setErrors] = useState({
+    firstname: false,
+    email: false,
+    passportNo: false,
+    country: false,
+    phone: false,
+    password: false,
+  })
   const [credentials, setCredentials] = useState({
     firstname: undefined,
     lastname: undefined,
@@ -31,6 +39,15 @@ export default function Register() {
 
   const handleClick = async (e) => {
     e.preventDefault();
+    setErrors({
+      firstname: false,
+      email: false,
+      passportNo: false,
+      country: false,
+      phone: false,
+      password: false,
+    });
+
     dispatch({ type: "REGISTER_START" });
     try {
       const res = await axios.post("/auth/register", credentials);
@@ -43,6 +60,42 @@ export default function Register() {
       navigate("/login");
     } catch (err) {
       dispatch({ type: "REGISTER_FAILURE", payload: err.response.data });
+      Swal.fire({
+        title: "Error",
+        text: err.response.data.message || "Registration Failed.",
+        icon: "error"
+      })
+
+      const validationErrors = {};
+      let hasError = false;
+      if (!credentials.firstname) {
+        validationErrors.firstname = true;
+        hasError = true;
+      }
+      if (!credentials.email) {
+        validationErrors.email = true;
+        hasError = true;
+      }
+      if (!credentials.passportNo) {
+        validationErrors.passportNo = true;
+        hasError = true;
+      }
+      if (!credentials.phone) {
+        validationErrors.phone = true;
+        hasError = true;
+      }
+      if (!credentials.country){
+        validationErrors.country = true;
+        hasError = true;
+      }
+      if (!credentials.password) {
+        validationErrors.password = true;
+        hasError = true;
+      }
+      setErrors(validationErrors);
+      if(hasError){
+        return;
+      }
     }
   };
 
@@ -84,7 +137,10 @@ export default function Register() {
                 id="firstname"
                 onChange={handleChange}
                 autoComplete="given-name"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={classNames(
+                  "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+                  errors.firstname ? "ring-red-500 focus:ring-red-600" : "ring-gray-300 focus:ring-indigo-600"
+                )}
               />
             </div>
           </div>
@@ -115,7 +171,10 @@ export default function Register() {
                 onChange={handleChange}
                 placeholder='example@mail.com'
                 autoComplete="email"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={classNames(
+                  "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+                  errors.email ? "ring-red-500 focus:ring-red-600" : "ring-gray-300 focus:ring-indigo-600"
+                )}
               />
             </div>
             
@@ -131,7 +190,10 @@ export default function Register() {
                 id="password"
                 onChange={handleChange}
                 autoComplete="password"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={classNames(
+                  "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+                  errors.password ? "ring-red-500 focus:ring-red-600" : "ring-gray-300 focus:ring-indigo-600"
+                )}
               />
             </div>
             
@@ -147,7 +209,10 @@ export default function Register() {
                 id="country"
                 onChange={handleChange}
                 autoComplete="organization"
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={classNames(
+                  "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+                  errors.country ? "ring-red-500 focus:ring-red-600" : "ring-gray-300 focus:ring-indigo-600"
+                )}
               />
             </div>
           </div>
@@ -165,8 +230,10 @@ export default function Register() {
                 id="passportNo"
                 onChange={handleChange}
                 placeholder=''
-
-                className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={classNames(
+                  "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+                  errors.passportNo ? "ring-red-500 focus:ring-red-600" : "ring-gray-300 focus:ring-indigo-600"
+                )}
               />
             </div>
             
@@ -181,8 +248,6 @@ export default function Register() {
                 <label htmlFor="country" className="sr-only">
                   Country
                 </label>
-
-    
               </div>
               <input
                 type="tel"
@@ -191,7 +256,10 @@ export default function Register() {
                 autoComplete="phone"
                 onChange={handleChange}
                 placeholder='Format: Country code + Phone number'
-                className="block w-full rounded-md border-0 px-3.5 py-2 pl-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className={classNames(
+                  "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+                  errors.phone ? "ring-red-500 focus:ring-red-600" : "ring-gray-300 focus:ring-indigo-600"
+                )}
               />
             </div>
           </div>
