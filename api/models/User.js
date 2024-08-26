@@ -1,14 +1,12 @@
 import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema(
   {
-
     firstname:{
       type: String,
       required: true,
     },
     lastname:{
       type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -50,7 +48,7 @@ const UserSchema = new mongoose.Schema(
     verifyAttempts: {
       type: Number,
       default: 0
-    }
+    } 
   },
   { timestamps: true }
 );

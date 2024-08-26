@@ -11,7 +11,7 @@ function classNames(...classes) {
 }
 
 export default function Register() {
-  const [agreed, setAgreed] = useState(false)
+  const [agreed, setAgreed] = useState(false);
   const [errors, setErrors] = useState({
     firstname: false,
     email: false,
@@ -54,10 +54,10 @@ export default function Register() {
       dispatch({ type: "REGISTER_SUCCESS", payload: res.data.details });
       Swal.fire({
         title: "Success",
-        text: "Registration success, you will be redirected to login page!",
+        text: "Succesfully created the account! Please complete the verification process to finalize your account.",
         icon: "success"
       });
-      navigate("/login");
+      navigate("/verify-account"); // Change it to navigate("/verify-account");
     } catch (err) {
       dispatch({ type: "REGISTER_FAILURE", payload: err.response.data });
       Swal.fire({

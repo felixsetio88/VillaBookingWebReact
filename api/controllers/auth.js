@@ -18,7 +18,7 @@ export const register = async (req, res, next) => {
       !req.body.country ||
       !req.body.phone ||
       !req.body.password){
-    return next(createError(400, "Please fill in all of the required fields!"));
+      return next(createError(400, "Please fill in all of the required fields!"));
     }
 
     if(!validator.isEmail(req.body.email)){
@@ -42,13 +42,17 @@ export const register = async (req, res, next) => {
     
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
-    const verificationTokens = Math.floor(100000 + Math.random() * 900000);
+    const verificationToken = Math.floor(100000 + Math.random() * 900000);
+    console.log(verificationToken);
 
     const newUser = new User({
       ...req.body,
       password: hash,
-      verificationToken: verificationTokens
+      verificationToken,
+      isVerified: false,
+      verifyAttempts: 0
     });
+    await newUser.save();
 
     const config = {
       service: 'gmail',
@@ -56,13 +60,14 @@ export const register = async (req, res, next) => {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
       }
-    };
+    }; 
+
     const transporter = nodemailer.createTransport(config);
     const logoPath = path.join(__dirname, '../assets/logo.png');
     const htmlMsg = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Verify Account Registration Notification</title>
@@ -147,8 +152,8 @@ export const register = async (req, res, next) => {
                 text-decoration: none;
             }
         </style>
-    </head>
-    <body>
+      </head>
+      <body>
         <div class="email-wrapper">
             <div class="email-heading">
                 <h1>Villa Rumah Nyaman</h1>
@@ -164,7 +169,7 @@ export const register = async (req, res, next) => {
                     </tr>
                     <tr>
                         <td>Account Verification Token</td>
-                        <td>${verificationTokens}</td>
+                        <td>${verificationToken}</td>
                     </tr>
                 </table>
                 <p>If you did not create the account. No further action is required.</p>
@@ -174,8 +179,8 @@ export const register = async (req, res, next) => {
                 &copy; 2024 <a href="#">Villa Rumah Nyaman</a>. All rights reserved.
             </div>
         </div>
-    </body>
-    </html>
+      </body>
+      </html>
     `;
 
     const message = {
@@ -190,30 +195,18 @@ export const register = async (req, res, next) => {
       }]
     }
 
-    transporter.sendMail(message, (error, info) => {
-      if(error){
-        console.log(error);
-        next(error);
-      } else {
-        console.log("Email sent: " + info.response);
-        newUser.save().then(() => {
-          res.status(200).json("User has been created. Please check your email to complete the verification process.");
-        }).catch(error => {
-          console.log(error);
-          next(error);
-        })
-      }
-    });
+    await transporter.sendMail(message); 
+    res.status(200).json("User has been created. Please check your email to complete the verification process.");
   } catch (err) {
     next(err);
   }
 };
 
 export const verifyAccount = async (req, res, next) => {
-  const {
-    email,
-    token
-  } = req.body;
+  const { email, token } = req.body;
+  if(!email || !token){
+    return next(createError(400, "Please fill in all of the required fields!"));
+  }
 
   try {
       const user = await User.findOne({ email });
@@ -226,8 +219,9 @@ export const verifyAccount = async (req, res, next) => {
         return next(createError(400, "You have verified your account already."));
       }
 
+      const tokenNum = parseInt(token, 10);
       // Validation checker to verify the token input
-      if(user.verificationToken !== token){
+      if(user.verificationToken !== tokenNum){
           // Check if the user proceeds the attempts more than 5 times
           if(user.verifyAttempts >= 5){
               await User.findByIdAndDelete(user._id);
@@ -242,11 +236,11 @@ export const verifyAccount = async (req, res, next) => {
       user.verifyAttempts = 0;
 
       await user.save();
-      res.status(200).json("Successfully verified the account!"); 
+      res.status(200).json("Successfully verified the account."); 
   } catch(err){
     next(err);
   }
-}
+} 
 
 export const login = async (req, res, next) => {
   try {

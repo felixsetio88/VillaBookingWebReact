@@ -21,6 +21,7 @@ const AuthReducer = (state, action) => {
   switch (action.type) {
     case "REGISTER_START":
     case "LOGIN_START":
+    case "VERIFY_REGISTER_START":
       return {
         user: null,
         loading: true,
@@ -33,8 +34,15 @@ const AuthReducer = (state, action) => {
         loading: false,
         error: null,
       };
+    case "VERIFY_REGISTER_SUCCESS":
+      return {
+        user: null,
+        loading: false,
+        error: null,
+      };
     case "REGISTER_FAILURE":
     case "LOGIN_FAILURE":
+    case "VERIFY_REGISTER_FAILURE":
       return {
         user: null,
         loading: false,
@@ -53,7 +61,6 @@ const AuthReducer = (state, action) => {
 
 export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
-
   useEffect(() => {
     localStorage.setItem("user", JSON.stringify(state.user));
     console.log(state.user)
