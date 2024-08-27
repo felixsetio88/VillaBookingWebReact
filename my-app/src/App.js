@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ResetPassword from './pages/verify-process/ResetPassword';
 import VerifyRegister from './pages/verify-process/VerifyRegister';
 import Find from './pages/Find';
 import Searchresult from "./pages/Searchresult";
@@ -33,6 +34,7 @@ function App() {
         <Route path="*" element={<NotFound/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Register/>}/>
+        <Route path="/reset-password" element={<ResetPassword/>}/>
         <Route path="/verify-account" element={<VerifyRegister/>}/>
         <Route path="/update" element={<UpdateData/>}/>
         <Route path="/myinfo" element={<MyInfo/>}/>

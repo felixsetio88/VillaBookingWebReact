@@ -34,6 +34,11 @@ export default function Login() {
       navigate("/")
     } catch (err) {
       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
+      Swal.fire({
+        title: "Error",
+        text: err.response.data.message,
+        icon: "error"
+      })
     }
   };
 

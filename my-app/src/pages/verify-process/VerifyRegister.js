@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import { eachMonthOfInterval } from 'date-fns'
 import { AuthContext } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import Navbar from "../../component/Navbar";
@@ -46,7 +45,7 @@ export default function VerifyRegister(){
         });
         navigate("/login");
       } catch(err){
-        dispatch({ type: "VERIFY_REGISTER_FAILURE", payload: err.response.data.message });
+        dispatch({ type: "VERIFY_REGISTER_FAILURE", payload: err.response.data });
         Swal.fire({
           title: "Error",
           text: err.response.data.message || "Verification Failed!",
@@ -115,7 +114,7 @@ export default function VerifyRegister(){
                                     </label>
                                     <div className="mt-2">
                                         <input
-                                            type="number"
+                                            type="text"
                                             placeholder="Token (e.g.): 192899"
                                             id="token"
                                             value={token}

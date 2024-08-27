@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import styles from "../style";
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 import Swal from "sweetalert2";
 
 export default function MyInfo() {
@@ -56,7 +57,7 @@ export default function MyInfo() {
           </div>
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
             <dt className="text-sm font-medium leading-6 text-gray-900">Member since</dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{user.createdAt}</dd>
+            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{format(new Date(user.createdAt), 'dd-MM-yyyy HH:mm')}</dd>
           </div>
         <div className="px-4 sm:px-0">
             <h1 className="font-poppins mt-10 text-[35px] font-semibold text-gray-900">Need something regarding your account?</h1>

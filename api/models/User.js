@@ -48,7 +48,16 @@ const UserSchema = new mongoose.Schema(
     verifyAttempts: {
       type: Number,
       default: 0
-    } 
+    },
+    /*
+    isPasswordChanged: {
+      type: Boolean,
+      default: false,
+    },
+    resetPasswordToken: {
+      type: Number,
+      default: null
+    } */
   },
   { timestamps: true }
 );

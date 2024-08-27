@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { location, phone, gmail } from '../assets';
+import Swal from "sweetalert2";
 import axios from 'axios';
 
 const Home_contactus = () => {
@@ -20,9 +21,17 @@ const Home_contactus = () => {
     e.preventDefault();
     try {
       const response = await axios.post('/send-email/', formData);
-      alert('Message sent successfully!');
+      Swal.fire({
+        title: "Success",
+        text: "Message sent successfully!",
+        icon: "success"
+      });
     } catch (error) {
-      alert('Failed to send the message. Please try again later.');
+      Swal.fire({
+        title: "Error",
+        text: "Failed to send the message. Please try again later.",
+        icon: "error"
+      });
     }
   };
 

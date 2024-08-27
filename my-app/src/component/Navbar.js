@@ -1,26 +1,27 @@
 import { useState } from "react";
 import { naviLinks } from "../constant";
-import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { logo } from "../assets/";
+
 export default function Navbar(){
-  const {user} = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
   const [active, setActive] = useState("Home");
   const [toggle, setToggle] = useState(false);
   const loggedInUser = user ? user.firstname : 'Guest'; 
 
+  const filteredNaviLinks = user ? naviLinks.filter((e) => e.title !== "Login" && e.title !== "Register") : naviLinks;
+
     return (
     <nav className="w-full flex py-6 justify-between items-center navbar">
       <img src={logo} alt="villa nyaman" className="w-[225px] h-[123px]"></img>
-
       <ul className="list-none sm:flex hidden justify-end items-center flex-1">
-        {naviLinks.map((nav, index) => (
+        {filteredNaviLinks.map((nav, index) => (
           <li
             key={nav.id}
             className={`font-poppins font-normal cursor-pointer text-[16px] ${
               active === nav.title ? "text-black" : "text-dimWhite"
-            } ${index === naviLinks.length - 1 ? "mr-0" : "mr-10"}`}
+            } ${index === filteredNaviLinks.length - 1 ? "mr-0" : "mr-10"}`}
             onClick={() => setActive(nav.title)}
           >
             <a href={`${nav.id}`}>{nav.title}</a>
@@ -28,11 +29,11 @@ export default function Navbar(){
         ))}
        
         {
-          
-          user ? <p className="font-poppins font-bold ml-10"> <a href="/myinfo">Welcome back! {loggedInUser}</a></p> : (
+          user ? <p className="font-poppins font-bold ml-10"> <a href="/myinfo">{loggedInUser}</a></p> : (
             <p className="font-poppins font-bold ml-10">Login for more</p>
           )
         }
+        
     
       </ul>
 
@@ -50,12 +51,12 @@ export default function Navbar(){
           } p-6 bg-blue-gradient absolute top-20 right-0 mx-4 my-2 min-w-[140px] rounded-xl sidebar`}
         >
           <ul className="list-none flex justify-end items-start flex-1 flex-col">
-            {naviLinks.map((nav, index) => (
+            {filteredNaviLinks.map((nav, index) => (
               <li
                 key={nav.id}
                 className={`font-poppins font-medium cursor-pointer text-[16px] ${
                   active === nav.title ? "text-white" : "text-dimWhite"
-                } ${index === naviLinks.length - 1 ? "mb-0" : "mb-4"}`}
+                } ${index === filteredNaviLinks.length - 1 ? "mb-0" : "mb-4"}`}
                 onClick={() => {
                   setActive(nav.title);
                   setToggle(false); 
