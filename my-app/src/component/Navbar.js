@@ -30,7 +30,7 @@ export default function Navbar(){
        
         {
           user ? <p className="font-poppins font-bold ml-10"> <a href="/myinfo">{loggedInUser}</a></p> : (
-            <p className="font-poppins font-bold ml-10">Login for more</p>
+            <p className="font-poppins font-bold ml-10">Guest</p>
           )
         }
         

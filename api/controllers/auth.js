@@ -244,6 +244,10 @@ export const verifyAccount = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
   try {
+    if(!req.body.email || !req.body.password){
+      return next(createError(404, "Please fill in all of the required fields!"));
+    }
+
     const user = await User.findOne({ email: req.body.email });
     if (!user) return next(createError(404, "User not found!"));
 
@@ -273,6 +277,10 @@ export const login = async (req, res, next) => {
 
 export const check = async (req, res, next) => {
   try {
+    if(!req.body.email || !req.body.password){
+      return next(createError(404, "Please fill in all of the required fields!"));
+    }
+
     const user = await User.findOne({ email: req.body.email });
     if (!user) return next(createError(404, "User not found!"));
 
@@ -281,7 +289,7 @@ export const check = async (req, res, next) => {
       user.password
     );
     if (!isPasswordCorrect){
-      return next(createError(400, "Wrong password or username!"));
+      return next(createError(400, "Invalid email or password!"));
     }
 
     res.status(200).send("email and password correct.")

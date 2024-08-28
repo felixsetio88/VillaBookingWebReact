@@ -52,6 +52,7 @@ export default function Register() {
     try {
       const res = await axios.post("/auth/register", credentials);
       dispatch({ type: "REGISTER_SUCCESS", payload: res.data.details });
+      localStorage.setItem('registeredEmail', credentials.email);
       Swal.fire({
         title: "Success",
         text: "Succesfully created the account! Please complete the verification process to finalize your account.",

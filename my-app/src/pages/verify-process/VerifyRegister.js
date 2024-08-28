@@ -1,9 +1,8 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { AuthContext } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
-import Navbar from "../../component/Navbar";
 import styles from "../../style";
 
 function classNames(...classes) {
@@ -19,6 +18,13 @@ export default function VerifyRegister(){
     });
     const { dispatch } = useContext(AuthContext);
     const navigate = useNavigate();
+
+    useEffect(() => {
+      const storedEmail = localStorage.getItem("registeredEmail");
+      if(storedEmail){
+        setEmail(storedEmail);
+      }
+    }, []);
 
     const handleChange = (e) => {
         if(e.target.id === "email"){
@@ -46,11 +52,20 @@ export default function VerifyRegister(){
         navigate("/login");
       } catch(err){
         dispatch({ type: "VERIFY_REGISTER_FAILURE", payload: err.response.data });
-        Swal.fire({
-          title: "Error",
-          text: err.response.data.message || "Verification Failed!",
-          icon: "error",
-        });
+        if(err.response.data.message === "Invalid token inserted!"){
+          Swal.fire({
+            title: "Error",
+            text: err.response.data.message || "Verification Failed!",
+            icon: "error",
+          });
+        } else if(err.response.data.message === "Too many incorrect attempts. Cancelling the registration process."){
+          Swal.fire({
+            title: "Error",
+            text: err.response.data.message || "Verification Failed!",
+            icon: "error",
+          });
+          navigate("/login");
+        }
 
         const validationErrors = {};
         let hasError = false;
@@ -73,7 +88,6 @@ export default function VerifyRegister(){
         <>
             <div className={`${styles.paddingX} ${styles.flexCenter}`}>
                 <div className={`${styles.boxWidth}`}>
-                    <Navbar />
                     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                             <h2 className="mt-10 text-center font-poppins text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -96,6 +110,7 @@ export default function VerifyRegister(){
                                             placeholder="email"
                                             id="email"
                                             value={email}
+                                            disabled={true}
                                             onChange={handleChange}
                                             className={classNames(
                                               "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",

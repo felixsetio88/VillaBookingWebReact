@@ -1,4 +1,3 @@
-import Navbar from "../../component/Navbar";
 import styles from "../../style";
 
 export default function VerifyPassword() {
@@ -6,7 +5,6 @@ export default function VerifyPassword() {
     <>
       <div className={`${styles.paddingX} ${styles.flexCenter}`}>
         <div className={`${styles.boxWidth}`}>
-          <Navbar />
           <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
               <h2 className="mt-10 text-center font-poppins text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -16,7 +14,6 @@ export default function VerifyPassword() {
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
               <form className="space-y-6" action="#" method="POST">
-                
                 <div>
                   <label
                     htmlFor="email"
@@ -33,7 +30,6 @@ export default function VerifyPassword() {
                     />
                   </div>
                 </div>
-
                 <div>
                   <label
                     htmlFor="token"

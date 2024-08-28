@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import styles from '../style';
@@ -12,6 +12,7 @@ function classNames(...classes) {
 
 export default function UpdateUserInfo() {
   const [disabledFields, setDisabledFields] = useState(true);
+  const [isValidated, setIsValidated] = useState(false);
   const [emailPassword, setEmailPassword] = useState({ email: '', password: '' });
   const [credentials, setCredentials] = useState({
     firstname: '',
@@ -22,7 +23,7 @@ export default function UpdateUserInfo() {
     phone: ''
   });
 
-  const { user, loading, error, dispatch } = useContext(AuthContext);
+  const { user, loading, error } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -33,30 +34,46 @@ export default function UpdateUserInfo() {
     setEmailPassword((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
+  useEffect(() => {
+    if(user){
+      setCredentials({
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        passportNo: user.passportNo,
+        country: user.country,
+        phone: user.phone
+      })
+    }
+  }, [user]);
+
   const handleValidation = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post("/auth/check/", emailPassword);
-      if ("email and password correct.") {
+      if(res.status === 200){
         Swal.fire({
             title: "Success",
             text: "You can now update your information!",
             icon: "success"
           });
         setDisabledFields(false);
+        setIsValidated(true);
+      } 
+    } catch (err){
+      if(err.response){
+        Swal.fire({
+          title: "Error",
+          text: err.response.data.message,
+          icon: "error"
+        })
       } else {
         Swal.fire({
           title: "Error",
-          text: "Email or password is incorrect!",
+          text: "Validation failed!",
           icon: "error"
         });
       }
-    } catch (err) {
-      Swal.fire({
-        title: "Error",
-        text: "Validation failed!",
-        icon: "error"
-      });
     }
   };
 
@@ -69,20 +86,21 @@ export default function UpdateUserInfo() {
             icon: "error"
         })
     }
-    else{
-    try {
-      const res = await axios.put(`/users/${user._id}`, credentials);
-      
-      Swal.fire({
-        title: "Success",
-        text: "Information updated successfully!",
-        icon: "success"
-      });
-      
-    } catch (err) {
-      
+    else {
+      try {
+        const res = await axios.put(`/users/${user._id}`, credentials);
+        if(res.status === 200){
+          Swal.fire({
+            title: "Success",
+            text: "Successfully updated the information! Please re-login from the system to ensure that your biodata has been updated.",
+            icon: "success"
+          });
+          navigate("/myinfo");
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
-}
   };
 
   return (
@@ -121,6 +139,7 @@ export default function UpdateUserInfo() {
                     name="email"
                     id="email"
                     onChange={handleEmailPasswordChange}
+                    disabled={isValidated}
                     placeholder='example@mail.com'
                     autoComplete="email"
                     className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -138,6 +157,7 @@ export default function UpdateUserInfo() {
                     name="password"
                     id="password"
                     onChange={handleEmailPasswordChange}
+                    disabled={isValidated}
                     placeholder='Enter your password'
                     autoComplete="current-password"
                     className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -148,6 +168,7 @@ export default function UpdateUserInfo() {
                 <button
                   type="submit"
                   onClick={handleValidation}
+                  disabled={isValidated}
                   className="block w-full rounded-md bg-cyan-300 px-3.5 py-2.5 text-center text-sm font-poppins font-semibold text-black shadow-sm hover:bg-cyan-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Confirm
@@ -165,6 +186,7 @@ export default function UpdateUserInfo() {
                     type="text"
                     name="firstname"
                     id="firstname"
+                    value={credentials.firstname}
                     onChange={handleChange}
                     disabled={disabledFields}
                     autoComplete="given-name"
@@ -182,6 +204,7 @@ export default function UpdateUserInfo() {
                     type="text"
                     name="lastname"
                     id="lastname"
+                    value={credentials.lastname}
                     onChange={handleChange}
                     disabled={disabledFields}
                     autoComplete="family-name"
@@ -199,6 +222,7 @@ export default function UpdateUserInfo() {
                     type="email"
                     name="email"
                     id="email"
+                    value={credentials.email}
                     onChange={handleChange}
                     disabled={disabledFields}
                     placeholder='example@mail.com'
@@ -217,6 +241,7 @@ export default function UpdateUserInfo() {
                     type="text"
                     name="passportNo"
                     id="passportNo"
+                    value={credentials.passportNo}
                     onChange={handleChange}
                     disabled={disabledFields}
                     className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -233,6 +258,7 @@ export default function UpdateUserInfo() {
                     type="text"
                     name="country"
                     id="country"
+                    value={credentials.country}
                     onChange={handleChange}
                     disabled={disabledFields}
                     autoComplete="organization"
@@ -250,6 +276,7 @@ export default function UpdateUserInfo() {
                     type="tel"
                     name="phone"
                     id="phone"
+                    value={credentials.phone}
                     onChange={handleChange}
                     disabled={disabledFields}
                     placeholder='Format: Country code + Phone number'
@@ -261,7 +288,8 @@ export default function UpdateUserInfo() {
               <div className="sm:col-span-2">
                 <button
                   type="submit"
-                  disabled={loading} onClick={handleClick}
+                  disabled={loading || disabledFields} 
+                  onClick={handleClick}
                   className="block w-full rounded-md bg-cyan-300 px-3.5 py-2.5 text-center text-sm font-poppins font-semibold text-black shadow-sm hover:bg-cyan-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Update Information
