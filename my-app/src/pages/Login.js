@@ -13,7 +13,7 @@ export default function Login() {
     password: undefined,
   });
 
-  const { user, loading, dispatch } = useContext(AuthContext);
+  const { loading, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
