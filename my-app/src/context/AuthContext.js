@@ -22,6 +22,8 @@ const AuthReducer = (state, action) => {
     case "REGISTER_START":
     case "LOGIN_START":
     case "VERIFY_REGISTER_START":
+    case "RESET_PASSWORD_START":
+    case "VERIFY_RESET_PASSWORD_START":
       return {
         user: null,
         loading: true,
@@ -29,12 +31,14 @@ const AuthReducer = (state, action) => {
       };
     case "REGISTER_SUCCESS":
     case "LOGIN_SUCCESS":
+    case "RESET_PASSWORD_SUCCESS":
       return {
         user: action.payload,
         loading: false,
         error: null,
       };
     case "VERIFY_REGISTER_SUCCESS":
+    case "VERIFY_RESET_PASSWORD_SUCCESS":
       return {
         user: null,
         loading: false,
@@ -42,7 +46,9 @@ const AuthReducer = (state, action) => {
       };
     case "REGISTER_FAILURE":
     case "LOGIN_FAILURE":
+    case "RESET_PASSWORD_FAILURE":
     case "VERIFY_REGISTER_FAILURE":
+    case "VERIFY_RESET_PASSWORD_FAILURE":
       return {
         user: null,
         loading: false,

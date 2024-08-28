@@ -3,15 +3,14 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import styles from '../style'
 import Navbar from '../component/Navbar'
-import { eachMonthOfInterval } from 'date-fns'
 import { AuthContext } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function Register() {
-  const [agreed, setAgreed] = useState(false);
   const [errors, setErrors] = useState({
     firstname: false,
     email: false,

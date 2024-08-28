@@ -251,6 +251,8 @@ export const login = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) return next(createError(404, "User not found!"));
 
+    if(!user.isVerified) return next(createError(400, "This account hasn't been verified yet. Please complete the verification process."));
+
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
       user.password
@@ -323,14 +325,15 @@ export const resetPassword = async (req, res, next) => {
     user.resetPasswordToken = resetPasswordToken;
     user.verifyAttempts = 0;
 
+    await user.save();
     let firstName = user.firstname;
     let lastName = user.lastname;
 
     const config = {
       service: 'gmail',
       auth: {
-          user: process.env.EMAIL,
-          pass: process.env.EMAIL_APP_PASSWORD
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
       }
   };
 
@@ -468,20 +471,8 @@ export const resetPassword = async (req, res, next) => {
     }]
   } 
 
-    transporter.sendMail(message, (error, info) => {
-        if(error){
-            console.log(error);
-            next(error);
-        } else {
-            console.log("Email sent: " + info.response);
-            user.save().then(() => {
-              res.status(200).json("Reset password token has been sent. Please check your email inbox.");
-            }).catch(error => {
-              console.log(error);
-              next(error);
-            });
-        }
-    });
+    await transporter.sendMail(message);
+    res.status(200).json("Reset password token has been sent. Please check your email inbox.");
   } catch(err){
     next(err);
   }
@@ -490,19 +481,23 @@ export const resetPassword = async (req, res, next) => {
 export const verifyResetPasswordRequest = async (req, res, next) => {
   const {
     email,
-    resetPasswordToken,
+    token,
     newPassword,
     confirmPassword
   } = req.body;
 
   try {
+    if(!email || !token || !newPassword || !confirmPassword){
+      return next(createError(400, "Please fill in all of the required fields!"));
+    }
+
     const user = await User.findOne({ email });
     if(!user){
         return next(createError(400, "Sorry, user is not found in the system."));
     }
 
-    // Check if the reset password token is correct
-    if(user.resetPasswordToken !== resetPasswordToken){
+    const parseToken = parseInt(token, 10);
+    if(user.resetPasswordToken !== parseToken){
         user.verifyAttempts += 1;
         if(user.verifyAttempts >= 5){
             user.resetPasswordToken = null;
@@ -521,7 +516,11 @@ export const verifyResetPasswordRequest = async (req, res, next) => {
     // Case if the token is correct and the new password along with the confirmation password matches
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(newPassword, salt);
+
     user.password = hash;
+    user.resetPasswordToken = null;
+    user.verifyAttempts = 0;
+    user.isPasswordChanged = true;
     await user.save();
     res.status(200).send("Successfully reset the password.");
   } catch(error){

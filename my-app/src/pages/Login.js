@@ -7,7 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import Navbar from "../component/Navbar"
 import styles from "../style"
 
-export default function Login() {
+export default function Login(){
   const [credentials, setCredentials] = useState({
     email: undefined,
     password: undefined,
@@ -78,7 +78,7 @@ export default function Login() {
                       Password
                     </label>
                     <div className="text-sm">
-                      <a href="#" className="font-semibold font-poppins text-black hover:text-cyan-300">
+                      <a href="/reset-password" className="font-semibold font-poppins text-black hover:text-cyan-300">
                         Forgot password?
                       </a>
                     </div>

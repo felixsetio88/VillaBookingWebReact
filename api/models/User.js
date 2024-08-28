@@ -49,7 +49,6 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    /*
     isPasswordChanged: {
       type: Boolean,
       default: false,
@@ -57,7 +56,7 @@ const UserSchema = new mongoose.Schema(
     resetPasswordToken: {
       type: Number,
       default: null
-    } */
+    } 
   },
   { timestamps: true }
 );

@@ -1,7 +1,66 @@
+import { useContext, useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { AuthContext } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../component/Navbar";
 import styles from "../../style";
 
-export default function ResetPassword() {
+function classNames(...classes){
+  return classes.filter(Boolean).join(' ');
+}
+
+export default function ResetPassword(){
+  const [email, setEmail] = useState('');
+  const [errors, setErrors] = useState({
+    email: false,
+  });
+  const { dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setEmail(e.target.value);
+  }
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    setErrors({
+      email: false,
+    });
+    dispatch({ type: "RESET_PASSWORD_START" });
+
+    try {
+      const res = await axios.post("/auth/reset-password", { email });
+      dispatch({ type: "RESET_PASSWORD_SUCCESS", payload: res.data.details });
+      localStorage.setItem('targetedEmail', email);
+      Swal.fire({
+        title: "Success",
+        text: "Reset password token has been sent. Please check your email inbox.",
+        icon: "success"
+      });
+      navigate("/verify-reset-password");
+    } catch(err){
+      dispatch({ type: "RESET_PASSWORD_FAILURE", payload: err.response.data });
+      Swal.fire({
+        title: "Error",
+        text: err.response.data.message || "Failed to proceed Reset Password.",
+        icon: "error"
+      });
+
+      let hasError = false;
+      if(!email){
+        setErrors({
+          email: true
+        });
+        hasError = true;
+      }
+
+      if(hasError){
+        return;
+      }
+    }
+  }
+
   return (
     <>
       <div className={`${styles.paddingX} ${styles.flexCenter}`}>
@@ -28,13 +87,19 @@ export default function ResetPassword() {
                       type="text"
                       placeholder="email"
                       id="email"
-                      className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 font-poppins shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                      value={email}
+                      onChange={handleChange}
+                      className={classNames(
+                        "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
+                        errors.email ? "ring-red-500 focus:ring-red-600" : "ring-gray-300 focus:ring-indigo-600"
+                      )}
                     />
                   </div>
                 </div>
 
                 <div>
                   <button
+                    onClick={handleClick}
                     className="flex w-full justify-center rounded-md bg-cyan-300 px-3 py-1.5 text-sm font-semibold font-poppins leading-6 text-black shadow-sm hover:bg-cyan-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     Reset Password
