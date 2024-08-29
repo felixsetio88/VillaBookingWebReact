@@ -130,7 +130,7 @@ export default function VerifyPassword() {
                       id="email"
                       value={email}
                       onChange={handleChange}
-                      disabled={true}
+                      readOnly={true}
                       className={classNames(
                         "block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6",
                         errors.email ? "ring-red-500 focus:ring-red-600" : "ring-gray-300 focus:ring-indigo-600"

@@ -57,7 +57,7 @@ export default function Register() {
         text: "Succesfully created the account! Please complete the verification process to finalize your account.",
         icon: "success"
       });
-      navigate("/verify-account"); // Change it to navigate("/verify-account");
+      navigate("/verify-account"); 
     } catch (err) {
       dispatch({ type: "REGISTER_FAILURE", payload: err.response.data });
       Swal.fire({

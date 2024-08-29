@@ -10,7 +10,7 @@ export default function Navbar(){
   const [toggle, setToggle] = useState(false);
   const loggedInUser = user ? user.firstname : 'Guest'; 
 
-  const filteredNaviLinks = user ? naviLinks.filter((e) => e.title !== "Login" && e.title !== "Register") : naviLinks;
+  const filteredNaviLinks = user ? [...naviLinks.filter((e) => e.title !== "Login" && e.title !== "Register")] : naviLinks.filter((e) => e.title !== "My Orders");
 
     return (
     <nav className="w-full flex py-6 justify-between items-center navbar">
