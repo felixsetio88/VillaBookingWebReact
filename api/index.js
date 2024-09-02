@@ -10,6 +10,7 @@ import orderRoute from "./routes/order.js";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import cors from "cors";
+import path from "path";
 
 const app = express();
 dotenv.config();
@@ -29,7 +30,10 @@ mongoose.connection.on("disconnected", () => {
 });
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONT_END_URL || "http://localhost:3000",
+  credentials: true
+}));
 app.use(cookieParser());
 app.use(express.json());
 app.use(bodyParser.json());
@@ -49,6 +53,10 @@ app.use("/api/users", usersRoute);
 app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
 app.use("/api/order", orderRoute);
+
+// Route for serving static files
+const __dirname = path.resolve();
+app.use("/uploads", express.static(path.join(__dirname, 'uploads')));
 
 // Email sending route
 app.post('/api/send-email', (req, res) => {

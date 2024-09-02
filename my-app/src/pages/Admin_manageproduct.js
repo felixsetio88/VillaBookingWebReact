@@ -34,7 +34,7 @@ const ManageProduct = () => {
     <h1 className="font-poppins mt-5 text-[35px] font-semibold text-gray-900">Manage Product</h1>
       {hotels.map((item) => (
         <div className="searchItem mt-10" key={item._id}>
-          <img src={item.photos[0]} alt="" className="siImg" />
+          <img src={`http://localhost:8800${item.photos[0]}`} alt="" className="siImg" />
           <div className="siDesc font-poppins">
             <h1 className="text-[25px] font-bold color-gray">{item.name}</h1>
             <span className="text-[15px]">{item.distance}m from nearest beach</span>

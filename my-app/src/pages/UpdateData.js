@@ -11,7 +11,7 @@ function classNames(...classes) {
 }
 
 export default function UpdateUserInfo() {
-  const [disabledFields, setDisabledFields] = useState(true);
+  const [disabledFields, setDisabledFields] = useState(true); 
   const [isValidated, setIsValidated] = useState(false);
   const [emailPassword, setEmailPassword] = useState({ email: '', password: '' });
   const [credentials, setCredentials] = useState({

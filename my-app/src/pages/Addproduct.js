@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { hotelInputs } from "../constant";
 import { FileInput, Label } from "flowbite-react";
 import { AuthContext } from "../context/AuthContext";
@@ -9,12 +10,12 @@ import styles from "../style";
 import Navbar from "../component/Navbar";
 import axios from "axios";
 
-
 const Addproduct = () => {
   const [files, setFiles] = useState([]);
   const [info, setInfo] = useState({});
   const [rooms, setRooms] = useState([]);
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const { data, loading, error } = useFetch("/api/hotels");
 
   const handleChange = (e) => {
@@ -28,34 +29,39 @@ const Addproduct = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     try {
-      const base64Files = await Promise.all(files.map(file => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = (error) => reject(error);
-        });
-      }));
+      const formData = new FormData();
+      for(const e in info){
+        formData.append(e, info[e]);
+      }
 
-      const newHotel = {
-        ...info,
-        rooms,
-        photos: base64Files,
-      };
+      files.forEach(file => formData.append('photos', file));
+      await axios.post("/hotels/createWithPhoto", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
 
-      await axios.post("/hotels", newHotel);
       Swal.fire({
         title: "Success",
         text: "Your product registration success!",
         icon: "success"
       });
+      navigate("/adminhome");
     } catch (err) {
       console.error(err);
-      Swal.fire({
-        title: "Failed!",
-        text: "Sorry, your product has not been added, it is possible that you are not using an admin account.",
-        icon: "error"
-      });
+      if(err.response && err.response.data && err.response.data.message){
+        Swal.fire({
+          title: "Failed",
+          text: err.response.data.message,
+          icon: "error"
+        });
+      } else {
+        Swal.fire({
+          title: "Failed",
+          text: "Sorry, your product has not been added, it is possible that you are not using an admin account.",
+          icon: "error"
+        });
+      }
     }
   };
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { FileInput } from "flowbite-react";
@@ -12,6 +13,7 @@ const EditProduct = () => {
   const [files, setFiles] = useState([]);
   const [info, setInfo] = useState({});
   const [rooms, setRooms] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHotel = async () => {
@@ -37,35 +39,28 @@ const EditProduct = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     try {
-      const base64Files = await Promise.all(
-        files.map((file) => {
-          return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-          });
-        })
-      );
+      const formData = new FormData();
+      for(const e in info){
+        formData.append(e, info[e]);
+      }
+      files.forEach(file => formData.append('photos', file));
 
-      const updatedHotel = {
-        ...hotel,
-        ...info, // Only override fields that were modified
-        rooms,
-        photos: files.length > 0 ? base64Files : hotel.photos, // Keep existing photos if no new ones are uploaded
-      };
-
-      await axios.put(`/hotels/${id}`, updatedHotel);
+      await axios.put(`/hotels/updateWithPhoto/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
       Swal.fire({
         title: "Success",
         text: "Hotel information updated successfully!",
         icon: "success",
       });
+      navigate("/adminhome");
     } catch (err) {
       console.error(err);
       Swal.fire({
         title: "Failed!",
-        text: "Hotel information could not be updated.",
+        text: err.response.data.message || "Hotel information could not be updated.",
         icon: "error",
       });
     }
@@ -98,7 +93,7 @@ const EditProduct = () => {
                     <div className="hotelImgWrapper" key={i}>
                       <img
                         //onClick={() => handleOpen(i)}
-                        src={photo}
+                        src={`http://localhost:8800${photo}`}
                         alt=""
                         className="hotelImg" />
                     </div>

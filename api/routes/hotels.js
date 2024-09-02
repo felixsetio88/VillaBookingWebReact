@@ -3,6 +3,7 @@ import {
   countByCity,
   countByType,
   createHotel,
+  createHotelWithPhoto,
   deleteHotel,
   getHotel,
   getHotelRooms,
@@ -10,23 +11,27 @@ import {
   getMostViewed,
   getRecentlyAdded,
   updateHotel,
+  updateHotelWithPhoto,
   updateSold,
   updateViews
 } from "../controllers/hotel.js";
 import Hotel from "../models/Hotel.js";
 
-import {verifyAdmin, verifyUser} from "../utils/verifyToken.js"
+import { verifyAdmin, verifyUser } from "../utils/verifyToken.js"
 const router = express.Router();
 
 //CREATE
 router.post("/", verifyAdmin, createHotel);
+router.post("/createWithPhoto", verifyAdmin, createHotelWithPhoto);
+router.put("/updateWithPhoto/:id", verifyAdmin, updateHotelWithPhoto);
 
 //UPDATE
 router.put("/:id", verifyAdmin, updateHotel);
+
 //DELETE
 router.delete("/:id", verifyAdmin, deleteHotel);
-//GET
 
+//GET
 router.get("/find/:id", getHotel);
 //GET ALL
 
