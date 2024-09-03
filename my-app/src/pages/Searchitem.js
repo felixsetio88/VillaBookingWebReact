@@ -6,8 +6,6 @@ import { useEffect } from "react";
 import axios from "axios";
 
 const SearchItem = ({ item }) => {
-
-
   return (
     <div className="searchItem">
       <img src={item.photos[0]} alt="" className="siImg" />

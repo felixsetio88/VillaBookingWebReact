@@ -49,6 +49,7 @@ export const register = async (req, res, next) => {
       ...req.body,
       password: hash,
       verificationToken,
+      isAdmin: false,
       isVerified: false,
       isPasswordChanged: false,
       verifyAttempts: 0
