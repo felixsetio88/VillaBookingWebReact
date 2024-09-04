@@ -230,6 +230,9 @@ export const getHotels = async (req, res, next) => {
     case "recent":
       sortOptions.createdAt = -1; // Sort by recently added (newest first)
       break;
+    case "type":
+      sortOptions.type = -1;
+      break;
     default:
       sortOptions = {}; // No sorting
   }
@@ -261,6 +264,7 @@ export const countByCity = async (req, res, next) => {
     next(err);
   }
 };
+
 export const countByType = async (req, res, next) => {
   try {
     const hotelCount = await Hotel.countDocuments({ type: "hotel" });
@@ -294,6 +298,7 @@ export const getHotelRooms = async (req, res, next) => {
     next(err);
   }
 };
+
 export const updateSold = async (req, res) => {
   const {id} = req.params;
   const {sold} = req.body;

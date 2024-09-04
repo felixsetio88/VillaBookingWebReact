@@ -2,12 +2,13 @@ import React from "react";
 
 export default function Home_hero(){
     return (
-        <><div
+        <>
+        <div
             className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-            aria-hidden="true"
-        >
+            aria-hidden="true">
 
-        </div><div className="mx-auto max-w-[1280px] py-16 sm:py-32 lg:py-8">
+        </div>
+        <div className="mx-auto max-w-[1280px] py-16 sm:py-32 lg:py-8">
                 <div className="hidden sm:mb-8 sm:flex sm:justify-center">
 
                 </div>

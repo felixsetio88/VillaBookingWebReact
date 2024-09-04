@@ -3,8 +3,8 @@ import React from 'react';
 
 const Home_weunderstand = ({ title, description, price }) => {
   return (
-<div className="mx-auto max-w-7xl px-6 lg:px-8">
-    <div className="mx-auto max-w-2xl lg:text-center">
+    <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-2xl lg:text-center">
 
         <p className="mt-[50px] text-[30px] font-poppins font-bold tracking-tight text-gray-900 sm:text-[60px]">
             We Understand Your Needs
@@ -17,9 +17,8 @@ const Home_weunderstand = ({ title, description, price }) => {
                   Find available villas <span aria-hidden="true">→</span>
             </a>
         </div>
+      </div>  
     </div>
-    
-</div>
   );
 };
 

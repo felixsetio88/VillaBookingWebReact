@@ -58,10 +58,6 @@ const Find_searchbar = ({type}) => {
 
 
         {type!=="list" && <>
-
-    
-
-
         <div className="headerSearch">
             <div className="headerSearchItem">
                 <img src={search} className="max-h-[18px]"></img>

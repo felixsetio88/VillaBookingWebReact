@@ -38,9 +38,7 @@ const Test_display = () => {
     axios.post('/order/create-order', order
       )
       .then(response => {
-        alert('Order created successfully');
-       
-       
+        alert('Order created successfully'); 
       })
       .catch(error => {
         console.error('Error creating order:', error);

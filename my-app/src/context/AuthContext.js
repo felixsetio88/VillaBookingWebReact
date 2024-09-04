@@ -2,7 +2,6 @@ import { createContext, useEffect, useReducer } from "react";
 
 const INITIAL_STATE = {
   user: null,
-  isAdmin: false,
   loading: false,
   error: null,
 };
@@ -10,9 +9,7 @@ const INITIAL_STATE = {
 try {
   const userData = localStorage.getItem("user");
   if(userData){
-    const user = JSON.parse(userData);
-    INITIAL_STATE.user = user;
-    INITIAL_STATE.isAdmin = user.isAdmin;
+    INITIAL_STATE.user = JSON.parse(userData);
   }
 } catch(error){
   console.error(error);
@@ -29,7 +26,6 @@ const AuthReducer = (state, action) => {
     case "VERIFY_RESET_PASSWORD_START":
       return {
         user: null,
-        isAdmin: false,
         loading: true,
         error: null,
       };
@@ -38,7 +34,6 @@ const AuthReducer = (state, action) => {
     case "RESET_PASSWORD_SUCCESS":
       return {
         user: action.payload,
-        isAdmin: action.payload.isAdmin,
         loading: false,
         error: null,
       };
@@ -46,7 +41,6 @@ const AuthReducer = (state, action) => {
     case "VERIFY_RESET_PASSWORD_SUCCESS":
       return {
         user: null,
-        isAdmin: false,
         loading: false,
         error: null,
       };
@@ -57,14 +51,12 @@ const AuthReducer = (state, action) => {
     case "VERIFY_RESET_PASSWORD_FAILURE":
       return {
         user: null,
-        isAdmin: false,
         loading: false,
         error: action.payload,
       };
     case "LOGOUT":
       return {
         user: null,
-        isAdmin: false,
         loading: false,
         error: null,
       };
@@ -88,7 +80,6 @@ export const AuthContextProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user: state.user,
-        isAdmin: state.isAdmin,
         firstname: state.firstname,
         loading: state.loading,
         error: state.error,

@@ -119,9 +119,9 @@ const Moreinformation = () => {
                     <div className="hotelImgWrapper" key={i}>
                       <img
                         onClick={() => handleOpen(i)}
-                        src={photo}
+                        src={`http://localhost:8800${photo}`}
                         alt=""
-                        className="hotelImg" />
+                        className="hotelImg"/>
                     </div>
                   ))}
                 </div>

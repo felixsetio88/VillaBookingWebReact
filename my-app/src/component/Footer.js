@@ -24,7 +24,10 @@ const Footer = () => {
           links: footerlink.links.filter((link) => link.name !== "My Info" && link.name !== "Update Info"),
         };
       } else {
-        return footerlink;
+        return {
+          ...footerlink,
+          links: footerlink.links.filter((link) => link.name !== "Login" && link.name !== "Register")
+        };
       }
     }
     return footerlink;

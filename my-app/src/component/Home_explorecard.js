@@ -3,7 +3,7 @@ import React from 'react';
 const Home_explorecard = ({ title, description, price, imageUrl, url }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden mx-auto sm:mx-0">
-      <img src={imageUrl} alt={title} className="h-48 w-full object-cover" />
+      <img src={`http://localhost:8800${imageUrl}`} alt={title} className="h-48 w-full object-cover" />
       <div className="p-6">
         <h2 className="text-lg font-bold font-poppins mb-2">{title}</h2>
         <p className="text-black font-poppins mb-4">{description}</p>

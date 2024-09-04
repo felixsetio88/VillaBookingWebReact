@@ -86,6 +86,7 @@ const Searchresult = () => {
                   <option value="price-desc">Price (High to Low)</option>
                   <option value="popular">Most Popular</option>
                   <option value="recent">Recently Added</option>
+                  <option value="type">Type</option>
                 </select>
               </div>
               {/* Existing Options */}
