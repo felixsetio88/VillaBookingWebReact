@@ -6,16 +6,7 @@ import moment from 'moment';
 
 // Create a new order
 export const createOrder = async (req, res) => {
-  //const user = await User.findById(req.body._id);
-  //console.log(user._id)
-  //if (!user) return res.status(404).json('User not found');
-  //const hotel = await Hotel.findById(req.body._id);
-  //if(!hotel) return res.status(404).json('Product not found');
-
-  
-
   const newOrder = new Order(req.body);
-
   try {
       const savedOrder = await newOrder.save();
       return res.status(200).json(savedOrder);
