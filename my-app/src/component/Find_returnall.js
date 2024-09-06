@@ -3,7 +3,7 @@ import useFetch from "../hooks/useFetch";
 import { batubelig_bg, denpasar_bg, pererenan_bg } from "../assets";
 
 const Find_returnall = () => {
-  const { data, loading, error } = useFetch(
+  const { data } = useFetch(
     "/hotels/countByCity?cities=Denpasar,Pererenan,Batubolong"
   );
  return (

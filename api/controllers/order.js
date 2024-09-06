@@ -6,6 +6,14 @@ import moment from 'moment';
 
 // Create a new order
 export const createOrder = async (req, res) => {
+  //const user = await User.findById(req.body._id);
+  //console.log(user._id)
+  //if (!user) return res.status(404).json('User not found');
+  //const hotel = await Hotel.findById(req.body._id);
+  //if(!hotel) return res.status(404).json('Product not found');
+
+  
+
   const newOrder = new Order(req.body);
 
   try {
@@ -80,7 +88,6 @@ export const getOrderStats = async (req, res) => {
       const startOfWeek = moment().startOf('isoWeek').toDate();
       const endOfWeek = moment().endOf('isoWeek').toDate();
 
-
       const totalRoomNumber = await Order.aggregate([
           { $group: { _id: null, totalRooms: { $sum: "$roomNumber" } } }
       ]);
@@ -124,7 +131,6 @@ export const getOrderStats = async (req, res) => {
           orderDate: { $gte: startOfWeek, $lte: endOfWeek }
       });
 
-      
       res.status(200).json({
           totalRoomNumber: totalRoomNumber[0]?.totalRooms || 0,
           totalAmount: totalAmount[0]?.totalAmount || 0,
@@ -138,9 +144,172 @@ export const getOrderStats = async (req, res) => {
           totalProductListed,
           totalAccountRegistered,
           totalProductViewed: totalProductViewed[0]?.totalProductViewed || 0,
-
+          
       });
   } catch (err) {
       res.status(500).json({ message: err.message });
   }
 }
+
+export const getRevenueGraph = async (req, res) => {
+  try {
+    const startOfWeek = moment().startOf('isoWeek').toDate();
+    const endOfWeek = moment().endOf('isoWeek').toDate();
+
+    const startOfPreviousWeeks = [
+      moment().subtract(1, 'weeks').startOf('isoWeek').toDate(),
+      moment().subtract(2, 'weeks').startOf('isoWeek').toDate(),
+      moment().subtract(3, 'weeks').startOf('isoWeek').toDate()
+    ];
+    const endOfPreviousWeeks = [
+      moment().subtract(1, 'weeks').endOf('isoWeek').toDate(),
+      moment().subtract(2, 'weeks').endOf('isoWeek').toDate(),
+      moment().subtract(3, 'weeks').endOf('isoWeek').toDate()
+    ];
+
+    // Function to get total amount for a given date range
+    const getTotalAmountForDateRange = async (start, end) => {
+      const result = await Order.aggregate([
+        { $match: { orderDate: { $gte: start, $lte: end } } },
+        { $group: { _id: null, totalAmount: { $sum: "$total" } } }
+      ]);
+      return result[0]?.totalAmount || 0;
+    };
+
+    // Get total amount for the current week
+    const totalAmountThisWeek = await getTotalAmountForDateRange(startOfWeek, endOfWeek);
+
+    // Get total amount for previous weeks
+    const totalAmountsForPreviousWeeks = await Promise.all(
+      startOfPreviousWeeks.map((start, index) =>
+        getTotalAmountForDateRange(start, endOfPreviousWeeks[index])
+      )
+    );
+
+    // Combine results
+    const data = {
+      labels: ['This Week', 'A Week Ago', 'Two Weeks Ago', 'Three Weeks Ago'],
+      datasets: [
+        {
+          label: 'Total Amount',
+          data: [totalAmountThisWeek, ...totalAmountsForPreviousWeeks],
+          fill: false,
+          borderColor: 'rgba(103, 232, 249, 1)',
+          tension: 0.1
+        }
+      ]
+    };
+
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getRoomSoldGraph = async (req, res) => {
+  try {
+    const startOfWeek = moment().startOf('isoWeek').toDate();
+    const endOfWeek = moment().endOf('isoWeek').toDate();
+
+    const startOfPreviousWeeks = [
+      moment().subtract(1, 'weeks').startOf('isoWeek').toDate(),
+      moment().subtract(2, 'weeks').startOf('isoWeek').toDate(),
+      moment().subtract(3, 'weeks').startOf('isoWeek').toDate()
+    ];
+    const endOfPreviousWeeks = [
+      moment().subtract(1, 'weeks').endOf('isoWeek').toDate(),
+      moment().subtract(2, 'weeks').endOf('isoWeek').toDate(),
+      moment().subtract(3, 'weeks').endOf('isoWeek').toDate()
+    ];
+
+    // Function to get total amount for a given date range
+    const gettotalRoomForDateRange = async (start, end) => {
+      const result = await Order.aggregate([
+        { $match: { orderDate: { $gte: start, $lte: end } } },
+        { $group: { _id: null, totalRoom: { $sum: "$roomNumber" } } }
+      ]);
+      return result[0]?.totalRoom || 0;
+    };
+
+    // Get total amount for the current week
+    const totalRoomThisWeek = await gettotalRoomForDateRange(startOfWeek, endOfWeek);
+
+    // Get total amount for previous weeks
+    const totalRoomsForPreviousWeeks = await Promise.all(
+      startOfPreviousWeeks.map((start, index) =>
+        gettotalRoomForDateRange(start, endOfPreviousWeeks[index])
+      )
+    );
+
+    // Combine results
+    const data = {
+      labels: ['This Week', 'A Week Ago', 'Two Weeks Ago', 'Three Weeks Ago'],
+      datasets: [
+        {
+          label: 'Total Amount',
+          data: [totalRoomThisWeek, ...totalRoomsForPreviousWeeks],
+          fill: false,
+          borderColor: 'rgba(103, 232, 249, 1)',
+          tension: 0.1
+        }
+      ]
+    };
+
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getAccountRegisteredGraph = async (req, res) => {
+  try {
+    // Get start and end of the current week
+    const startOfWeek = moment().startOf('isoWeek').toDate();
+    const endOfWeek = moment().endOf('isoWeek').toDate();
+
+    // Get start and end of previous weeks
+    const startOfPreviousWeeks = [
+      moment().subtract(1, 'weeks').startOf('isoWeek').toDate(),
+      moment().subtract(2, 'weeks').startOf('isoWeek').toDate(),
+      moment().subtract(3, 'weeks').startOf('isoWeek').toDate()
+    ];
+    const endOfPreviousWeeks = [
+      moment().subtract(1, 'weeks').endOf('isoWeek').toDate(),
+      moment().subtract(2, 'weeks').endOf('isoWeek').toDate(),
+      moment().subtract(3, 'weeks').endOf('isoWeek').toDate()
+    ];
+
+    // Function to count registered accounts for a given date range
+    const getRegisteredAccountsForDateRange = async (start, end) => {
+      return await User.countDocuments({ registrationDate: { $gte: start, $lte: end } });
+    };
+
+    // Get registered accounts for the current week
+    const registeredAccountsThisWeek = await getRegisteredAccountsForDateRange(startOfWeek, endOfWeek);
+
+    // Get registered accounts for previous weeks
+    const registeredAccountsForPreviousWeeks = await Promise.all(
+      startOfPreviousWeeks.map((start, index) =>
+        getRegisteredAccountsForDateRange(start, endOfPreviousWeeks[index])
+      )
+    );
+
+    // Combine results
+    const data = {
+      labels: ['This Week', 'A Week Ago', 'Two Weeks Ago', 'Three Weeks Ago'],
+      datasets: [
+        {
+          label: 'Registered Accounts',
+          data: [registeredAccountsThisWeek, ...registeredAccountsForPreviousWeeks],
+          fill: false,
+          borderColor: 'rgba(103, 232, 249, 1)',
+          tension: 0.1
+        }
+      ]
+    };
+
+    res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
