@@ -4,24 +4,24 @@ import { useState, useEffect } from "react";
 import styles from "../style";
 import Navbar from "../component/Navbar";
 const ManageProduct = () => {
-  const [hotels, setHotels] = useState([]);
+  const [villas, setVillas] = useState([]);
 
   useEffect(() => {
-    const fetchHotels = async () => {
+    const fetchVillas = async () => {
       try {
-        const response = await axios.get("/hotels");
-        setHotels(response.data);
+        const response = await axios.get("/villas");
+        setVillas(response.data);
       } catch (err) {
         console.error(err);
       }
     };
-    fetchHotels();
+    fetchVillas();
   }, []);
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`/hotels/${id}`);
-      setHotels(hotels.filter((hotel) => hotel._id !== id));
+      await axios.delete(`/villas/${id}`);
+      setVillas(villas.filter((villa) => villa._id !== id));
     } catch (err) {
       console.error(err);
     }
@@ -32,7 +32,7 @@ const ManageProduct = () => {
     <div className={`${styles.boxWidth}`}>
     <Navbar />
     <h1 className="font-poppins mt-5 text-[35px] font-semibold text-gray-900">Manage Product</h1>
-      {hotels.map((item) => (
+      {villas.map((item) => (
         <div className="searchItem mt-10" key={item._id}>
           <img src={`http://localhost:8800${item.photos[0]}`} alt="" className="siImg" />
           <div className="siDesc font-poppins">

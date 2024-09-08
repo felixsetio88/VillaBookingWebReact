@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { hotelInputs } from "../constant";
+import { villaInputs } from "../constant";
 import { FileInput, Label } from "flowbite-react";
 import { AuthContext } from "../context/AuthContext";
 import { useContext} from "react";
@@ -16,7 +16,7 @@ const Addproduct = () => {
   const [rooms, setRooms] = useState([]);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { data, loading, error } = useFetch("/api/hotels");
+  const { data, loading, error } = useFetch("/api/villas");
 
   const handleChange = (e) => {
     setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -35,7 +35,7 @@ const Addproduct = () => {
       }
 
       files.forEach(file => formData.append('photos', file));
-      await axios.post("/hotels/createWithPhoto", formData, {
+      await axios.post("/villas/createWithPhoto", formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }

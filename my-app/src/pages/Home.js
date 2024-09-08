@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-pascal-case */
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -13,22 +14,22 @@ import Footer from "../component/Footer";
 import { bghero } from '../assets';
 
 export default function Home() {
-  // State for most viewed hotels
-  const [mostViewedHotels, setMostViewedHotels] = useState([]);
+  // State for most viewed villas
+  const [mostViewedVillas, setMostViewedVillas] = useState([]);
   const [loadingMostViewed, setLoadingMostViewed] = useState(true);
   const [errorMostViewed, setErrorMostViewed] = useState(null);
 
-  // State for last added hotels
-  const [lastAddedHotels, setLastAddedHotels] = useState([]);
+  // State for last added villas
+  const [lastAddedVillas, setLastAddedVillas] = useState([]);
   const [loadingLastAdded, setLoadingLastAdded] = useState(true);
   const [errorLastAdded, setErrorLastAdded] = useState(null);
 
   useEffect(() => {
-    // Fetch most viewed hotels
-    const fetchMostViewedHotels = async () => {
+    // Fetch most viewed villas
+    const fetchMostViewedVillas = async () => {
       try {
-        const res = await axios.get('/hotels/most-viewed');
-        setMostViewedHotels(res.data.slice(0, 3)); // Get only the top 3 hotels
+        const res = await axios.get('/villas/most-viewed');
+        setMostViewedVillas(res.data.slice(0, 3)); // Get only the top 3 villas
       } catch (err) {
         setErrorMostViewed(err.message);
       } finally {
@@ -36,11 +37,11 @@ export default function Home() {
       }
     };
 
-    // Fetch last added hotels
-    const fetchLastAddedHotels = async () => {
+    // Fetch last added villas
+    const fetchLastAddedVillas = async () => {
       try {
-        const res = await axios.get('/hotels/recently-added');
-        setLastAddedHotels(res.data.slice(0, 3)); // Get only the last 3 hotels
+        const res = await axios.get('/villas/recently-added');
+        setLastAddedVillas(res.data.slice(0, 3)); // Get only the last 3 villas
       } catch (err) {
         setErrorLastAdded(err.message);
       } finally {
@@ -48,8 +49,8 @@ export default function Home() {
       }
     };
 
-    fetchMostViewedHotels();
-    fetchLastAddedHotels();
+    fetchMostViewedVillas();
+    fetchLastAddedVillas();
   }, []);
 
   if (loadingMostViewed || loadingLastAdded) return <div className="flex justify-center items-center min-h-screen">
@@ -82,37 +83,37 @@ export default function Home() {
 
         <div className={`mx-auto max-w-[1380px] justify-center items-center ${styles.paddingX} ${styles.flexCenter}`}>
           <div className={`${styles.boxWidth}`}>
-            {/* Explore Most Viewed Hotels Section */}
+            {/* Explore Most Viewed Villas Section */}
             <div className="mt-[100px]">
               <h1 id="explore" className="text-4xl font-bold font-poppins mb-8">Explore</h1>
               <p className="font-poppins mb-8">Explore our most popular villas</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {mostViewedHotels.map((hotel) => (
+                {mostViewedVillas.map((villa) => (
                   <Home_explorecard
-                    key={hotel._id}
-                    title={hotel.name}
-                    description={hotel.desc}
-                    price={`Rp. ${hotel.cheapestPrice}`}
-                    imageUrl={hotel.photos[0]}
-                    url={`/result/${hotel._id}`}
+                    key={villa._id}
+                    title={villa.name}
+                    description={villa.desc}
+                    price={`Rp. ${villa.cheapestPrice}`}
+                    imageUrl={villa.photos[0]}
+                    url={`/result/${villa._id}`}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Last Added Hotels Section */}
+            {/* Last Added Villas Section */}
             <div className="mt-[100px]">
               <h1 className="text-4xl font-bold font-poppins mb-8">Recently Added</h1>
               <p className="font-poppins mb-8">Check out our latest additions</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {lastAddedHotels.map((hotel) => (
+                {lastAddedVillas.map((villa) => (
                   <Home_explorecard
-                    key={hotel._id}
-                    title={hotel.name}
-                    description={hotel.desc}
-                    price={`Rp. ${hotel.cheapestPrice}`}
-                    imageUrl={hotel.photos[0]}
-                    url={`/result/${hotel._id}`}
+                    key={villa._id}
+                    title={villa.name}
+                    description={villa.desc}
+                    price={`Rp. ${villa.cheapestPrice}`}
+                    imageUrl={villa.photos[0]}
+                    url={`/result/${villa._id}`}
                   />
                 ))}
               </div>

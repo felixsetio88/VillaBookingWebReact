@@ -22,7 +22,7 @@ const Searchresult = () => {
   const [sort, setSort] = useState(""); // New state for sorting
 
   const { data, loading, error, reFetch } = useFetch(
-    `/hotels?city=${destination}&min=${min || 0}&max=${max || 999}&sort=${sort}`
+    `/villas?city=${destination}&min=${min || 0}&max=${max || 999}&sort=${sort}`
   );
 
   const handleClick = () => {

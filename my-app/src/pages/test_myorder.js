@@ -22,12 +22,12 @@ const MyOrder = () => {
         const ordersData = await Promise.all(
           res.data.map(async (order) => {
             const userRes = await axios.get(`/users/${order.user}`);
-            const hotelRes = await axios.get(`/hotels/find/${order.hotel._id}`);
+            const villaRes = await axios.get(`/villas/find/${order.villa._id}`);
 
             return {
               ...order,
               user: userRes.data,
-              hotel: hotelRes.data,
+              villa: villaRes.data,
             };
           })
         );
@@ -84,7 +84,7 @@ const MyOrder = () => {
     doc.setFontSize(12);
     doc.text(`Order ID: ${order._id}`, 10, 30);
     doc.text(`Order Date: ${new Date(order.orderDate).toLocaleDateString()}`, 10, 36);
-    doc.text(`Hotel: ${order.hotel.name}`, 10, 42);
+    doc.text(`Villa: ${order.villa.name}`, 10, 42);
     doc.text(`Start Date: ${new Date(order.startDate).toLocaleDateString()}`, 10, 48);
     doc.text(`End Date: ${new Date(order.endDate).toLocaleDateString()}`, 10, 54);
     doc.text(`Total: Rp. ${order.total}`, 10, 60);
@@ -176,8 +176,8 @@ const MyOrder = () => {
 
                   <div className="mt-5 sm:ml-10 mb-4 sm:mb-0">
                     <img
-                      src={`http://localhost:8800${order.hotel.photos[0]}`}
-                      alt="Hotel"
+                      src={`http://localhost:8800${order.villa.photos[0]}`}
+                      alt="Villa"
                       className="w-full sm:w-[320px] h-[240px] md:w-[400px] h-[300px] lg:w-[400px] h-[300px] object-cover rounded-[10px]"
                     />
                   </div>

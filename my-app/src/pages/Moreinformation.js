@@ -23,7 +23,7 @@ const Moreinformation = () => {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [options, setOptions] = useState(location.state?.options || { adult: 1, children: 0, room: 1 });
-  const { data, loading, error } = useFetch(`/hotels/find/${id}`);
+  const { data, loading, error } = useFetch(`/villas/find/${id}`);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -75,7 +75,7 @@ const Moreinformation = () => {
             viewed = 1
           }
           viewed +=1;
-          await axios.put(`/hotels/update-view/${id}`, { viewed: viewed});
+          await axios.put(`/villas/update-view/${id}`, { viewed: viewed});
           console.log("View count updated to:" + data.viewed); // Logs the new view count
           
         } catch (error) {
@@ -104,7 +104,7 @@ const Moreinformation = () => {
 
               <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
                 <h1 className="font-poppins font-semibold text-[30px] ml-10">{data.name}</h1>
-                <div className="hotelAddress ml-10">
+                <div className="villaAddress ml-10">
                   <FontAwesomeIcon icon={faLocationDot} />
                   <span className="font-poppins text-[20px]">{data.address}</span>
                 </div>
@@ -116,12 +116,12 @@ const Moreinformation = () => {
                 </span>
                 <div className="mt-10">
                   {data.photos?.map((photo, i) => (
-                    <div className="hotelImgWrapper" key={i}>
+                    <div className="villaImgWrapper" key={i}>
                       <img
                         onClick={() => handleOpen(i)}
                         src={`http://localhost:8800${photo}`}
                         alt=""
-                        className="hotelImg"/>
+                        className="villaImg"/>
                     </div>
                   ))}
                 </div>
@@ -154,7 +154,7 @@ const Moreinformation = () => {
             startDate={startDate}
             endDate={endDate}
             days={days}
-            hotelId={id}
+            villaId={id}
           />
         </div>
       )}

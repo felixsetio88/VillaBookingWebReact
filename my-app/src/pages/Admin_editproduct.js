@@ -9,23 +9,23 @@ import Swal from "sweetalert2";
 
 const EditProduct = () => {
   const { id } = useParams();
-  const [hotel, setHotel] = useState({});
+  const [villa, setVilla] = useState({});
   const [files, setFiles] = useState([]);
   const [info, setInfo] = useState({});
   const [rooms, setRooms] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchHotel = async () => {
+    const fetchVilla = async () => {
       try {
-        const response = await axios.get(`/hotels/find/${id}`);
-        setHotel(response.data);
+        const response = await axios.get(`/villas/find/${id}`);
+        setVilla(response.data);
         setInfo(response.data);  // Set initial info
       } catch (err) {
         console.error(err);
       }
     };
-    fetchHotel();
+    fetchVilla();
   }, [id]);
 
   const handleChange = (e) => {
@@ -45,14 +45,14 @@ const EditProduct = () => {
       }
       files.forEach(file => formData.append('photos', file));
 
-      await axios.put(`/hotels/updateWithPhoto/${id}`, formData, {
+      await axios.put(`/villas/updateWithPhoto/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
       });
       Swal.fire({
         title: "Success",
-        text: "Hotel information updated successfully!",
+        text: "Villa information updated successfully!",
         icon: "success",
       });
       navigate("/adminhome");
@@ -60,7 +60,7 @@ const EditProduct = () => {
       console.error(err);
       Swal.fire({
         title: "Failed!",
-        text: err.response.data.message || "Hotel information could not be updated.",
+        text: err.response.data.message || "Villa information could not be updated.",
         icon: "error",
       });
     }
@@ -89,13 +89,13 @@ const EditProduct = () => {
           You must enter all of the fields to continue
         </p>
         <div className="mt-10">
-                  {hotel.photos?.map((photo, i) => (
-                    <div className="hotelImgWrapper" key={i}>
+                  {villa.photos?.map((photo, i) => (
+                    <div className="villaImgWrapper" key={i}>
                       <img
                         //onClick={() => handleOpen(i)}
                         src={`http://localhost:8800${photo}`}
                         alt=""
-                        className="hotelImg" />
+                        className="villaImg" />
                     </div>
                   ))}
                 </div>
@@ -111,8 +111,8 @@ const EditProduct = () => {
                 type="text"
                 name="name"
                 id="name"
-                defaultValue={hotel.name}
-                placeholder={hotel.name}
+                defaultValue={villa.name}
+                placeholder={villa.name}
                 onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -127,8 +127,8 @@ const EditProduct = () => {
                 type="text"
                 name="type"
                 id="type"
-                defaultValue={hotel.type}
-                placeholder={hotel.type}
+                defaultValue={villa.type}
+                placeholder={villa.type}
                 onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -143,8 +143,8 @@ const EditProduct = () => {
                 type="text"
                 name="city"
                 id="city"
-                defaultValue={hotel.city}
-                placeholder={hotel.city}
+                defaultValue={villa.city}
+                placeholder={villa.city}
                 onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -159,8 +159,8 @@ const EditProduct = () => {
                 type="text"
                 name="address"
                 id="address"
-                defaultValue={hotel.address}
-                placeholder={hotel.address}
+                defaultValue={villa.address}
+                placeholder={villa.address}
                 onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -175,8 +175,8 @@ const EditProduct = () => {
                 type="text"
                 name="distance"
                 id="distance"
-                defaultValue={hotel.distance}
-                placeholder={hotel.distance}
+                defaultValue={villa.distance}
+                placeholder={villa.distance}
                 onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -191,8 +191,8 @@ const EditProduct = () => {
                 type="text"
                 name="title"
                 id="title"
-                defaultValue={hotel.title}
-                placeholder={hotel.title}
+                defaultValue={villa.title}
+                placeholder={villa.title}
                 onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -207,8 +207,8 @@ const EditProduct = () => {
                 type="text"
                 name="description"
                 id="desc"
-                defaultValue={hotel.desc}
-                placeholder={hotel.desc}
+                defaultValue={villa.desc}
+                placeholder={villa.desc}
                 onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -225,8 +225,8 @@ const EditProduct = () => {
                 type="text"
                 name="Price"
                 id="cheapestPrice"
-                defaultValue={hotel.cheapestPrice}
-                placeholder={hotel.cheapestPrice}
+                defaultValue={villa.cheapestPrice}
+                placeholder={villa.cheapestPrice}
                 onChange={handleChange}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -244,7 +244,7 @@ const EditProduct = () => {
                   <select
                     name="featured"
                     id="featured"
-                    defaultValue={hotel.featured}
+                    defaultValue={villa.featured}
                     onChange={handleChange}
                     className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   >

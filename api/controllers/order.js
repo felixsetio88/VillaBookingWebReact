@@ -1,7 +1,7 @@
 // orderController.js
 import Order from "../models/Order.js";
 import User from "../models/User.js";
-import Hotel from "../models/Hotel.js";
+import Villa from "../models/Villa.js";
 import moment from 'moment';
 
 // Create a new order
@@ -37,7 +37,7 @@ export const getMyOrders = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select("-password")
    
-    const orders = await Order.find({ user: user }).populate('hotel');
+    const orders = await Order.find({ user: user }).populate('villa');
     console.log(user)
     res.status(200).json(orders);
   } catch (err) {
@@ -107,9 +107,9 @@ export const getOrderStats = async (req, res) => {
 
       const totalConfirmed = await Order.countDocuments({ confirmed: true });
 
-      const totalProductListed = await Hotel.countDocuments();
+      const totalProductListed = await Villa.countDocuments();
 
-      const totalProductViewed = await Hotel.aggregate([
+      const totalProductViewed = await Villa.aggregate([
         { $group: { _id: null, totalProductViewed: { $sum: "$viewed" } } }
     ]);
 

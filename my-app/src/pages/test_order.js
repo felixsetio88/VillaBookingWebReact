@@ -14,11 +14,11 @@ const Orders = () => {
         const res = await axios.get('/order/orders/');
         const ordersData = await Promise.all(res.data.map(async (order) => {
           const userRes = await axios.get(`/users/${order.user}`);
-          const hotelRes = await axios.get(`/hotels/find/${order.hotel}`);
+          const villaRes = await axios.get(`/villas/find/${order.villa}`);
           return {
             ...order,
             user: userRes.data,
-            hotel: hotelRes.data
+            villa: villaRes.data
           };
         }));
         setOrders(ordersData);
@@ -183,10 +183,10 @@ const Orders = () => {
                   </div>
 
                   <div className="sm:ml-10 mb-4 sm:mb-0">
-                    {order.hotel && order.hotel.photos && order.hotel.photos.length > 0 ? (
+                    {order.villa && order.villa.photos && order.villa.photos.length > 0 ? (
                       <img
-                        src={`http://localhost:8800${order.hotel.photos[0]}`}
-                        alt="Hotel"
+                        src={`http://localhost:8800${order.villa.photos[0]}`}
+                        alt="Villa"
                         className="w-full sm:w-[320px] h-[240px] md:w-[400px] h-[300px] lg:w-[400px] h-[300px] object-cover rounded-[10px]"
                       />
                     ) : (

@@ -32,7 +32,7 @@ const OrdersAdmin = () => {
         <thead>
           <tr>
             <th>Customer Name</th>
-            <th>Hotel Name</th>
+            <th>Villa Name</th>
             <th>Start Date</th>
             <th>End Date</th>
             <th>Total</th>
@@ -42,7 +42,7 @@ const OrdersAdmin = () => {
           {orders.map(order => (
             <tr key={order._id}>
               <td>{order.user.firstname} {order.user.lastname}</td>
-              <td>{order.hotel.name}</td>
+              <td>{order.villa.name}</td>
               <td>{new Date(order.startDate).toLocaleDateString()}</td>
               <td>{new Date(order.endDate).toLocaleDateString()}</td>
               <td>{order.total}</td>

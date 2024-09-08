@@ -165,18 +165,18 @@ export const naviLinks = [
     },
   ];
   
-  export const hotelInputs = [
+  export const villaInputs = [
     {
       id: "name",
       label: "Name",
       type: "text",
-      placeholder: "My Hotel",
+      placeholder: "My Villa",
     },
     {
       id: "type",
       label: "Type",
       type: "text",
-      placeholder: "hotel",
+      placeholder: "villa",
     },
     {
       id: "city",
@@ -200,7 +200,7 @@ export const naviLinks = [
       id: "title",
       label: "Title",
       type: "text",
-      placeholder: "The best Hotel",
+      placeholder: "The best Villa",
     },
     {
       id: "desc",

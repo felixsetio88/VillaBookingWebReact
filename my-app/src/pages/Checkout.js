@@ -10,17 +10,17 @@ import { useNavigate } from "react-router-dom";
 import "./Checkout.css";
 import axios from "axios";
 
-const Checkout = ({ setOpen, roomCount, startDate, endDate, days, hotelId }) => {
+const Checkout = ({ setOpen, roomCount, startDate, endDate, days, villaId }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const id = location.pathname.split("/")[2];
-  const { data, loading, error } = useFetch(`/hotels/find/${id}`);
+  const { data, loading, error } = useFetch(`/villas/find/${id}`);
   const { user } = useContext(AuthContext);
 
   const handleOrderCreation = async () => {
     const order = {
       user: user._id,
-      hotel: id,
+      villa: id,
       startDate: startDate,
       endDate: endDate,
       total: roomCount * days * data.cheapestPrice,
@@ -31,9 +31,9 @@ const Checkout = ({ setOpen, roomCount, startDate, endDate, days, hotelId }) => 
       const response = await axios.post('/order/create-order', order);
       console.log(response.data); // handle response as needed
 
-      // Update the "sold" field in the hotel schema
+      // Update the "sold" field in the villa schema
       const updatedSold = data.sold + roomCount;
-      await axios.put(`/hotels/update-sold/${id}`, { sold: updatedSold });
+      await axios.put(`/villas/update-sold/${id}`, { sold: updatedSold });
 
       setOpen(false);
       Swal.fire({

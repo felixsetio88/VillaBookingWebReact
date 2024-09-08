@@ -2,11 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import nodemailer from "nodemailer";
-import authRoute from "./routes/auth.js";
-import usersRoute from "./routes/users.js";
-import hotelsRoute from "./routes/hotels.js";
-import roomsRoute from "./routes/rooms.js";
-import orderRoute from "./routes/order.js";
+import authRoute from "./routes/authRoute.js";
+import usersRoute from "./routes/usersRoute.js";
+import villasRoute from "./routes/villasRoute.js";
+import roomsRoute from "./routes/roomsRoute.js";
+import orderRoute from "./routes/orderRoute.js";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import cors from "cors";
@@ -50,7 +50,7 @@ const transporter = nodemailer.createTransport({
 // Routes
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
-app.use("/api/hotels", hotelsRoute);
+app.use("/api/villas", villasRoute);
 app.use("/api/rooms", roomsRoute);
 app.use("/api/order", orderRoute);
 

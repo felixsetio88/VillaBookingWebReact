@@ -1,4 +1,4 @@
-import Hotel from "../models/Hotel.js";
+import Villa from "../models/Villa.js";
 import Room from "../models/Room.js";
 import { createError } from "../utils/error.js";
 import path from "path";
@@ -10,13 +10,13 @@ import { Formidable } from "formidable";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const createHotel = async (req, res, next) => {
-  const newHotel = new Hotel(req.body);
+export const createVilla = async (req, res, next) => {
+  const newVilla = new Villa(req.body);
 
   try {
     if (req.user.isAdmin){
-      const savedHotel = await newHotel.save();
-      res.status(200).json(savedHotel);
+      const savedVilla = await newVilla.save();
+      res.status(200).json(savedVilla);
     } else {
       alert("You are not admin!")
     }
@@ -25,7 +25,7 @@ export const createHotel = async (req, res, next) => {
   }
 };
 
-export const createHotelWithPhoto = async (req, res, next) => {
+export const createVillaWithPhoto = async (req, res, next) => {
   const form = new Formidable();
 
   form.parse(req, async(err, fields, files) => {
@@ -51,8 +51,8 @@ export const createHotelWithPhoto = async (req, res, next) => {
         return next(createError(400, "Sorry, your product has not been added, it is possible that you are not using an admin account."));
       }
 
-      const isHotelExist = await Hotel.findOne({ name });
-      if(isHotelExist){
+      const isVillaExist = await Villa.findOne({ name });
+      if(isVillaExist){
         return next(createError(400, "This name has already been used. Try for another name."));
       }
 
@@ -77,7 +77,7 @@ export const createHotelWithPhoto = async (req, res, next) => {
         uploadedPhotos.push(picturePath);
       }
 
-      const newHotel = new Hotel({
+      const newVilla = new Villa({
         name,
         type,
         city,
@@ -88,15 +88,15 @@ export const createHotelWithPhoto = async (req, res, next) => {
         cheapestPrice,
         photos: uploadedPhotos
       });
-      const savedHotel = await newHotel.save();
-      res.status(200).json(savedHotel);
+      const savedVilla = await newVilla.save();
+      res.status(200).json(savedVilla);
     } catch(err){
       next(err);
     }
   })
 }
 
-export const updateHotelWithPhoto = async (req, res, next) => {
+export const updateVillaWithPhoto = async (req, res, next) => {
   const form = new Formidable();
 
   form.parse(req, async(err, fields, files) => {
@@ -109,7 +109,7 @@ export const updateHotelWithPhoto = async (req, res, next) => {
     }
     
     try {
-      const hotelId = req.params.id;
+      const villaId = req.params.id;
       const name = Array.isArray(fields.name) ? fields.name[0] : fields.name;
       const type = Array.isArray(fields.type) ? fields.type[0] : fields.type;
       const city = Array.isArray(fields.city) ? fields.city[0] : fields.city;
@@ -119,27 +119,27 @@ export const updateHotelWithPhoto = async (req, res, next) => {
       const desc = Array.isArray(fields.desc) ? fields.desc[0] : fields.desc;
       const cheapestPrice = Number(fields.cheapestPrice);
 
-      const hotel = await Hotel.findById(hotelId);
-      if(!hotel){
-        return next(createError(400, "Sorry, hotel is not found in the system"));
+      const villa = await Villa.findById(villaId);
+      if(!villa){
+        return next(createError(400, "Sorry, villa is not found in the system"));
       }
 
-      if(name && hotel.name !== name){
-        const isHotelExists = await Hotel.findOne({ name });
-        if(isHotelExists){
+      if(name && villa.name !== name){
+        const isVillaExists = await Villa.findOne({ name });
+        if(isVillaExists){
           return next(createError(400, "This name has already been used. Try for another name."));
         }
       }
 
       let dataChanges = {
-        name: name || hotel.name,
-        type: type || hotel.type,
-        city: city || hotel.city,
-        address: address || hotel.address,
-        distance: distance || hotel.distance,
-        title: title || hotel.title,
-        desc: desc || hotel.desc,
-        cheapestPrice: cheapestPrice || hotel.cheapestPrice
+        name: name || villa.name,
+        type: type || villa.type,
+        city: city || villa.city,
+        address: address || villa.address,
+        distance: distance || villa.distance,
+        title: title || villa.title,
+        desc: desc || villa.desc,
+        cheapestPrice: cheapestPrice || villa.cheapestPrice
       };
 
       if(files.photos){
@@ -162,7 +162,7 @@ export const updateHotelWithPhoto = async (req, res, next) => {
         }
 
         if(uploadedPhotos.length > 0){
-          for(const oldPhoto of hotel.photos){
+          for(const oldPhoto of villa.photos){
             const oldPhotoPath = path.join(__dirname, '../uploads/villas', path.basename(oldPhoto));
             if(fs.existsSync(oldPhotoPath)){
               fs.unlinkSync(oldPhotoPath);
@@ -173,46 +173,46 @@ export const updateHotelWithPhoto = async (req, res, next) => {
           dataChanges.photos = uploadedPhotos;
         }
       }
-      const updatedHotel = await Hotel.findByIdAndUpdate(hotelId, { $set: dataChanges }, { new: true });
-      res.status(200).json(updatedHotel);
+      const updatedVilla = await Villa.findByIdAndUpdate(villaId, { $set: dataChanges }, { new: true });
+      res.status(200).json(updatedVilla);
     } catch(err){
       next(err);
     }
   })
 }
 
-export const updateHotel = async (req, res, next) => {
+export const updateVilla = async (req, res, next) => {
   try {
-    const updatedHotel = await Hotel.findByIdAndUpdate(
+    const updatedVilla = await Villa.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
       { new: true }
     );
-    res.status(200).json(updatedHotel);
+    res.status(200).json(updatedVilla);
   } catch (err) {
     next(err);
   }
 };
 
-export const deleteHotel = async (req, res, next) => {
+export const deleteVilla = async (req, res, next) => {
   try {
-    await Hotel.findByIdAndDelete(req.params.id);
-    res.status(200).json("Hotel has been deleted.");
+    await Villa.findByIdAndDelete(req.params.id);
+    res.status(200).json("Villa has been deleted.");
   } catch (err) {
     next(err);
   }
 };
 
-export const getHotel = async (req, res, next) => {
+export const getVilla = async (req, res, next) => {
   try {
-    const hotel = await Hotel.findById(req.params.id);
-    res.status(200).json(hotel);
+    const villa = await Villa.findById(req.params.id);
+    res.status(200).json(villa);
   } catch (err) {
     next(err);
   }
 };
 
-export const getHotels = async (req, res, next) => {
+export const getVillas = async (req, res, next) => {
   const { min, max, sort, ...others } = req.query;
 
   let sortOptions = {};
@@ -238,14 +238,14 @@ export const getHotels = async (req, res, next) => {
   }
 
   try {
-    const hotels = await Hotel.find({
+    const villas = await Villa.find({
       ...others,
       cheapestPrice: { $gt: min || 1, $lt: max || 999 },
     })
       .sort(sortOptions) // Apply sorting
       .limit(req.query.limit);
 
-    res.status(200).json(hotels);
+    res.status(200).json(villas);
   } catch (err) {
     next(err);
   }
@@ -256,7 +256,7 @@ export const countByCity = async (req, res, next) => {
   try {
     const list = await Promise.all(
       cities.map((city) => {
-        return Hotel.countDocuments({ city: city });
+        return Villa.countDocuments({ city: city });
       })
     );
     res.status(200).json(list);
@@ -267,29 +267,29 @@ export const countByCity = async (req, res, next) => {
 
 export const countByType = async (req, res, next) => {
   try {
-    const hotelCount = await Hotel.countDocuments({ type: "hotel" });
-    const apartmentCount = await Hotel.countDocuments({ type: "apartment" });
-    const resortCount = await Hotel.countDocuments({ type: "resort" });
-    const villaCount = await Hotel.countDocuments({ type: "villa" });
-    const cabinCount = await Hotel.countDocuments({ type: "cabin" });
+    const hotelCount = await Villa.countDocuments({ type: "Hotel" });
+    const apartmentCount = await Villa.countDocuments({ type: "Apartment" });
+    const resortCount = await Villa.countDocuments({ type: "Resort" });
+    const villaCount = await Villa.countDocuments({ type: "Villa" });
+    const cabinCount = await Villa.countDocuments({ type: "Cabin" });
 
     res.status(200).json([
-      { type: "hotel", count: hotelCount },
-      { type: "apartments", count: apartmentCount },
-      { type: "resorts", count: resortCount },
-      { type: "villas", count: villaCount },
-      { type: "cabins", count: cabinCount },
+      { type: "Hotel", count: hotelCount },
+      { type: "Apartments", count: apartmentCount },
+      { type: "Resorts", count: resortCount },
+      { type: "Villas", count: villaCount },
+      { type: "Cabins", count: cabinCount },
     ]);
   } catch (err) {
     next(err);
   }
 };
 
-export const getHotelRooms = async (req, res, next) => {
+export const getVillaRooms = async (req, res, next) => {
   try {
-    const hotel = await Hotel.findById(req.params.id);
+    const villa = await Villa.findById(req.params.id);
     const list = await Promise.all(
-      hotel.rooms.map((room) => {
+      villa.rooms.map((room) => {
         return Room.findById(room);
       })
     );
@@ -303,8 +303,8 @@ export const updateSold = async (req, res) => {
   const {id} = req.params;
   const {sold} = req.body;
   try {
-    const updatedHotel = await Hotel.findByIdAndUpdate(id, { sold }, { new: true });
-    res.status(200).json(updatedHotel);
+    const updatedVilla = await Villa.findByIdAndUpdate(id, { sold }, { new: true });
+    res.status(200).json(updatedVilla);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -314,8 +314,8 @@ export const updateViews = async (req, res) => {
   const {id} = req.params;
   const {viewed} = req.body;
   try {
-    const updatedHotel = await Hotel.findByIdAndUpdate(id, { viewed }, { new: true });
-    res.status(200).json(updatedHotel);
+    const updatedVilla = await Villa.findByIdAndUpdate(id, { viewed }, { new: true });
+    res.status(200).json(updatedVilla);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -323,9 +323,9 @@ export const updateViews = async (req, res) => {
 
 export const getMostViewed = async (req, res) => {
   try {
-    const mostViewedHotels = await Hotel.find().sort({ viewed: -1 }).limit(3);
+    const mostViewedVillas = await Villa.find().sort({ viewed: -1 }).limit(3);
     
-    res.status(200).json(mostViewedHotels);
+    res.status(200).json(mostViewedVillas);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -333,9 +333,8 @@ export const getMostViewed = async (req, res) => {
 
 export const getRecentlyAdded = async (req, res) => {
   try {
-    const lastAddedHotels = await Hotel.find().sort({ createdAt: -1 }).limit(3);
-    
-    res.status(200).json(lastAddedHotels);
+    const lastAddedVillas = await Villa.find().sort({ createdAt: -1 }).limit(3);
+    res.status(200).json(lastAddedVillas);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

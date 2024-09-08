@@ -42,7 +42,7 @@ export const getAllOrders = async (req, res) => {
     if (!req.user.isAdmin) {
       return res.status(403).send('Access denied');
     }
-    const orders = await Order.find().populate('user').populate('hotel');
+    const orders = await Order.find().populate('user').populate('villa');
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -52,7 +52,7 @@ export const getAllOrders = async (req, res) => {
 // Get orders for the logged-in user
 export const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user._id }).populate('hotel');
+    const orders = await Order.find({ user: req.user._id }).populate('villa');
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ error: error.message });

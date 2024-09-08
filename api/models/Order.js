@@ -5,9 +5,9 @@ const OrderSchema = new mongoose.Schema({
         ref: 'User', 
         required: true 
     },
-    hotel: { 
+    villa: { 
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Hotel', 
+        ref: 'Villa', 
         required: true 
     },
     startDate: { 

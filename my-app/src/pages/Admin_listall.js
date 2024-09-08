@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { hotelInputs } from "../constant";
+import { villaInputs } from "../constant";
 import useFetch from "../hooks/useFetch";
 import axios from "axios";
 
@@ -8,7 +8,7 @@ const Newproduct = () => {
   const [info, setInfo] = useState({});
   const [rooms, setRooms] = useState([]);
 
-  const { data, loading, error } = useFetch("/api/hotels");
+  const { data, loading, error } = useFetch("/api/villas");
 
   const handleChange = (e) => {
     setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -30,17 +30,17 @@ const Newproduct = () => {
         });
       }));
 
-      const newHotel = {
+      const newVilla = {
         ...info,
         rooms,
         photos: base64Files,
       };
 
-      await axios.post("/hotels", newHotel);
-      alert("Hotel added successfully");
+      await axios.post("/villas", newVilla);
+      alert("Villa added successfully");
     } catch (err) {
       console.error(err);
-      alert("Failed to add hotel");
+      alert("Failed to add villa");
     }
   };
 
@@ -75,7 +75,7 @@ const Newproduct = () => {
                 />
               </div>
 
-              {hotelInputs.map((input) => (
+              {villaInputs.map((input) => (
                 <div className="formInput" key={input.id}>
                   <label>{input.label}</label>
                   <input

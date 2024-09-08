@@ -4,7 +4,7 @@ import { batubelig_bg, denpasar_bg, pererenan_bg } from "../assets";
 
 const Find_returnall = () => {
   const { data } = useFetch(
-    "/hotels/countByCity?cities=Denpasar,Pererenan,Batubolong"
+    "/villas/countByCity?cities=Denpasar,Pererenan,Batubolong"
   );
  return (
    <div>

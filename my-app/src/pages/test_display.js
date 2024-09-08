@@ -5,13 +5,13 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 
 const Test_display = () => {
-  const [hotels, sethotels] = useState([]);
+  const [villas, setvillas] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const {user} = useContext(AuthContext);
 
   const [order, setOrder] = useState({
     user: undefined,
-    hotel: undefined,
+    villa: undefined,
     startDate: undefined,
     endDate: undefined, 
     orderDate: undefined,
@@ -20,16 +20,16 @@ const Test_display = () => {
   })
 
   useEffect(() => {
-    axios.get('/hotels/') // Adjust the API endpoint as needed
+    axios.get('/villas/') // Adjust the API endpoint as needed
       .then(response => {
-        sethotels(response.data);
+        setvillas(response.data);
       })
       .catch(error => {
-        console.error('Error fetching hotels:', error);
+        console.error('Error fetching villas:', error);
       });
   }, []);
 
-  const handleBuy = (hotelId, availableStock) => {
+  const handleBuy = (villaId, availableStock) => {
     if (quantity <= 0 || quantity > availableStock) {
       alert('Invalid quantity');
       return;
@@ -47,13 +47,13 @@ const Test_display = () => {
 
   return (
     <div>
-      <h1>Available hotels</h1>
-      {hotels.map(hotel => (
-        <div key={hotel._id}>
-          <h2>{hotel.title}</h2>
-          <p>{hotel.description}</p>
-          <p>Price: ${hotel.price}</p>
-          <p>Available Stock: {hotel.stock}</p>
+      <h1>Available villas</h1>
+      {villas.map(villa => (
+        <div key={villa._id}>
+          <h2>{villa.title}</h2>
+          <p>{villa.description}</p>
+          <p>Price: ${villa.price}</p>
+          <p>Available Stock: {villa.stock}</p>
           <input
             type="number"
             value={quantity}
@@ -61,7 +61,7 @@ const Test_display = () => {
             min="1"
             
           />
-          <button onClick={() => handleBuy(hotel._id)}>Buy</button>
+          <button onClick={() => handleBuy(villa._id)}>Buy</button>
         </div>
       ))}
     </div>
