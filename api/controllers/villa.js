@@ -10,21 +10,6 @@ import { Formidable } from "formidable";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const createVilla = async (req, res, next) => {
-  const newVilla = new Villa(req.body);
-
-  try {
-    if (req.user.isAdmin){
-      const savedVilla = await newVilla.save();
-      res.status(200).json(savedVilla);
-    } else {
-      alert("You are not admin!")
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
 export const createVillaWithPhoto = async (req, res, next) => {
   const form = new Formidable();
 
@@ -180,6 +165,21 @@ export const updateVillaWithPhoto = async (req, res, next) => {
     }
   })
 }
+
+export const createVilla = async (req, res, next) => {
+  const newVilla = new Villa(req.body);
+
+  try {
+    if (req.user.isAdmin){
+      const savedVilla = await newVilla.save();
+      res.status(200).json(savedVilla);
+    } else {
+      alert("You are not admin!")
+    }
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const updateVilla = async (req, res, next) => {
   try {

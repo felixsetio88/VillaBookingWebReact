@@ -1,6 +1,6 @@
 import User from "../models/User.js";
-
 import Order from "../models/Order.js";
+
 export const updateUser = async (req,res,next)=>{
   try {
     const updatedUser = await User.findByIdAndUpdate(
@@ -13,6 +13,7 @@ export const updateUser = async (req,res,next)=>{
     next(err);
   }
 }
+
 export const deleteUser = async (req,res,next)=>{
   try {
     await User.findByIdAndDelete(req.params.id);
@@ -21,6 +22,7 @@ export const deleteUser = async (req,res,next)=>{
     next(err);
   }
 }
+
 export const getUser = async (req,res,next)=>{
   try {
     const user = await User.findById(req.params.id);
@@ -29,6 +31,7 @@ export const getUser = async (req,res,next)=>{
     next(err);
   }
 }
+
 export const getUsers = async (req,res,next)=>{
   try {
     const users = await User.find();
@@ -37,6 +40,7 @@ export const getUsers = async (req,res,next)=>{
     next(err);
   }
 }
+
 export const getAllOrders = async (req, res) => {
   try {
     if (!req.user.isAdmin) {

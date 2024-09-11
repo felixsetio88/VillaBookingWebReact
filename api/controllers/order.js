@@ -17,12 +17,12 @@ export const createOrder = async (req, res) => {
 
 // Get all orders made by all customers (admin access only)
 export const getAllOrders = async (req, res, next) => {
-  
   try {
-    if (req.user.isAdmin) {
+    const user = await User.findById(req.user.id).select("-password");
+    if (user.isAdmin) {
       console.log(req.user.isAdmin)
       console.log(req.user.firstname)
-      const orders = await Order.find();
+      const orders = await Order.find().populate('villa').populate('user');
       res.status(200).json(orders);
     }
     return res.status(403).json({ message: 'Access denied' });
@@ -37,7 +37,7 @@ export const getMyOrders = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select("-password")
    
-    const orders = await Order.find({ user: user }).populate('villa');
+    const orders = await Order.find({ user: user._id }).populate('villa').populate('user');
     console.log(user)
     res.status(200).json(orders);
   } catch (err) {

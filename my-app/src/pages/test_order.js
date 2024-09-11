@@ -12,15 +12,7 @@ const Orders = () => {
     const fetchOrders = async () => {
       try {
         const res = await axios.get('/order/orders/');
-        const ordersData = await Promise.all(res.data.map(async (order) => {
-          const userRes = await axios.get(`/users/${order.user}`);
-          const villaRes = await axios.get(`/villas/find/${order.villa}`);
-          return {
-            ...order,
-            user: userRes.data,
-            villa: villaRes.data
-          };
-        }));
+        const ordersData = res.data;
         setOrders(ordersData);
       } catch (err) {
         setError(err.message);

@@ -32,7 +32,7 @@ mongoose.connection.on("disconnected", () => {
 // Middlewares
 app.use(cors({
   origin: process.env.FRONT_END_URL || "http://localhost:3000",
-  credentials: true
+  credentials: true,
 }));
 app.use(cookieParser());
 app.use(express.json());
@@ -67,8 +67,8 @@ app.post('/api/send-email', (req, res) => {
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER, // Sender email
-    to: process.env.EMAIL_USER,   // Receiver email (same email for simplicity)
+    from: process.env.EMAIL_USER, 
+    to: process.env.EMAIL_USER,   
     subject: `Message from ${fullName}`,
     text: `Message from ${fullName} (${email}): \n\n${message}`,
   };

@@ -90,12 +90,12 @@ const EditProduct = () => {
         </p>
         <div className="mt-10">
                   {villa.photos?.map((photo, i) => (
-                    <div className="villaImgWrapper" key={i}>
+                    <div className="hotelImgWrapper" key={i}>
                       <img
                         //onClick={() => handleOpen(i)}
                         src={`http://localhost:8800${photo}`}
                         alt=""
-                        className="villaImg" />
+                        className="hotelImg" />
                     </div>
                   ))}
                 </div>

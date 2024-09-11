@@ -19,18 +19,7 @@ const MyOrder = () => {
     const fetchOrders = async () => {
       try {
         const res = await axios.get('/order/myorder/');
-        const ordersData = await Promise.all(
-          res.data.map(async (order) => {
-            const userRes = await axios.get(`/users/${order.user}`);
-            const villaRes = await axios.get(`/villas/find/${order.villa._id}`);
-
-            return {
-              ...order,
-              user: userRes.data,
-              villa: villaRes.data,
-            };
-          })
-        );
+        const ordersData = res.data;
         setOrders(ordersData);
         setFilteredOrders(ordersData); // Set initial orders for display
       } catch (err) {
@@ -175,11 +164,15 @@ const MyOrder = () => {
                   </div>
 
                   <div className="mt-5 sm:ml-10 mb-4 sm:mb-0">
-                    <img
-                      src={`http://localhost:8800${order.villa.photos[0]}`}
-                      alt="Villa"
-                      className="w-full sm:w-[320px] h-[240px] md:w-[400px] h-[300px] lg:w-[400px] h-[300px] object-cover rounded-[10px]"
-                    />
+                  {order.villa && order.villa.photos && order.villa.photos.length > 0 ? (
+                  <img
+                    src={`http://localhost:8800${order.villa.photos[0]}`}
+                    alt="Villa"
+                    className="w-full sm:w-[320px] h-[240px] md:w-[400px] lg:w-[400px] object-cover rounded-[10px]"
+                  />
+                  ) : (
+                    <p>No villa image available</p>
+                  )}
                   </div>
                 </div>
 

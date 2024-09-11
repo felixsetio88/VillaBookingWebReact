@@ -9,7 +9,7 @@ const useOrderStats = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get('/order/stats/'); // Adjust this to your API endpoint
+        const response = await axios.get('/order/stats/'); 
         setStats(response.data);
         setLoading(false);
       } catch (err) {

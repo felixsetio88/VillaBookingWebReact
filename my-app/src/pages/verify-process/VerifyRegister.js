@@ -5,19 +5,19 @@ import { AuthContext } from '../../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import styles from "../../style";
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ');
+function classNames(...classes){
+  return classes.filter(Boolean).join(' ');
 }
 
 export default function VerifyRegister(){
-    const [email, setEmail] = useState("");
-    const [token, setToken] = useState("");
-    const [errors, setErrors] = useState({
-      email: false,
-      token: false
-    });
-    const { dispatch } = useContext(AuthContext);
-    const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [token, setToken] = useState("");
+  const [errors, setErrors] = useState({
+    email: false,
+    token: false
+  });
+  const { dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
 
     useEffect(() => {
       const storedEmail = localStorage.getItem("registeredEmail");
